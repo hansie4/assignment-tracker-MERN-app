@@ -1,0 +1,25 @@
+Databases:
+
+    User-Accounts:
+        - _id
+        - email_address
+        - hashed_password
+        - username
+        - date_registered
+        - semesters_id
+
+    User-Assignments:
+        - _id
+        - semesters[]
+            - _id
+            - name
+            - start_date
+            - end_date
+            - classes[]
+                - _id
+                - name
+                - assignments[]
+                    - _id
+                    - name
+                    - due_date
+                    - turned_in
