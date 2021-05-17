@@ -17,7 +17,7 @@ function auth(req, res, next) {
 
     try {
         // Verify token
-        const decoded = verify(token, process.env.JWT_SECRET)
+        const decoded = verify(token, process.env.JWT_SECRET, { algorithm: 'RS256' })
 
         // Add decoded account id
         req.account_id = decoded
