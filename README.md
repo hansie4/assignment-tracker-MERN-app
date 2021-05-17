@@ -7,12 +7,15 @@ This is a project I am working on over the summer to learn and get expierence in
 
 
 ## Backend
-
+    Nodejs
+    Expressjs
+    Mongoose
+    Bcryptjs
+    Jsonwebtoken
 
 
 ## Database
-
-
+    MongoDB Database Free Tier Cluster for development
 
 ## Conclusion
 
