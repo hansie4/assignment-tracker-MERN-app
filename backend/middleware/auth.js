@@ -1,9 +1,9 @@
-import { verify } from 'jsonwebtoken'
-import { config } from 'dotenv'
+const jwt = require('jsonwebtoken')
+const dotenv = require('dotenv')
 
 /* ----------------------------------DEV---------------------------------- */
 // Load Environmental Variables
-const result = config({ path: './configs/.env' })
+const result = dotenv.config({ path: 'configs.env' })
 if (result.error) {
     throw result.error
 }
@@ -17,7 +17,7 @@ function auth(req, res, next) {
 
     try {
         // Verify token
-        const decoded = verify(token, process.env.JWT_SECRET, { algorithm: 'RS256' })
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
         // Add decoded account id
         req.account_id = decoded
@@ -28,4 +28,4 @@ function auth(req, res, next) {
     }
 }
 
-export default auth
+module.exports = auth
