@@ -1,6 +1,7 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
+const express = require('express')
+const mongoose = require('mongoose')
+const dotenv = require('dotenv')
+const accountRoute = require('./routes/accounts')
 
 /* ----------------------------------DEV---------------------------------- */
 // Load Environmental Variables
@@ -18,7 +19,7 @@ const app = express()
 app.use(express.json())
 
 // Use Routes
-app.use('/account', require('./routes/accounts'))
+app.use('/account', accountRoute)
 
 // Connect to Database
 mongoose.connect(process.env.DATABASE_URI, {
