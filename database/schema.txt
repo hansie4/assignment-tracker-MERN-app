@@ -6,7 +6,7 @@ Databases:
         - hashed_password
         - username
         - date_registered
-        - semesters_id
+        - assignments_id
 
     User-Assignments:
         - _id
@@ -18,8 +18,11 @@ Databases:
             - classes[]
                 - _id
                 - name
+                - description
+                - instructor_info
                 - assignments[]
                     - _id
                     - name
+                    - notes
                     - due_date
                     - turned_in
