@@ -1,4 +1,4 @@
-Databases:
+Database Design:
 
     User-Accounts:
         - email_address
@@ -29,4 +29,6 @@ Databases:
                     - due_date
                     - turned_in
                     - assignment_type_id
+                        - name
+                        - weight
                     - grade
