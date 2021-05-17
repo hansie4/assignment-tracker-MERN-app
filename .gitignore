@@ -1,4 +1,5 @@
 node_modules/
 
 backend/configs.env
-.vscode/settings.json
+
+.vscode/
