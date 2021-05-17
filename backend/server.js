@@ -1,15 +1,17 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const dotenv = require('dotenv')
 const accountRoute = require('./routes/accounts')
 
 /* ----------------------------------DEV---------------------------------- */
 // Load Environmental Variables
-const environmentalVars = dotenv.config({ path: './configs.env' })
-if (environmentalVars.error) {
-    throw environmentalVars.error
-} else {
-    console.log('Environmental Variables Loaded')
+if (process.env.NODE_ENV === 'development') {
+    const dotenv = require('dotenv')
+    const environmentalVars = dotenv.config({ path: './configs.env' })
+    if (environmentalVars.error) {
+        throw environmentalVars.error
+    } else {
+        console.log('Environmental Variables Loaded')
+    }
 }
 
 // Start Application

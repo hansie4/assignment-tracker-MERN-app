@@ -1,11 +1,13 @@
 const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv')
 
 /* ----------------------------------DEV---------------------------------- */
 // Load Environmental Variables
-const result = dotenv.config({ path: 'configs.env' })
-if (result.error) {
-    throw result.error
+if (process.env.NODE_ENV === 'development') {
+    const dotenv = require('dotenv')
+    const result = dotenv.config({ path: 'configs.env' })
+    if (result.error) {
+        throw result.error
+    }
 }
 
 function auth(req, res, next) {
