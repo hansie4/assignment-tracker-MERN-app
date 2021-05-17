@@ -1,7 +1,6 @@
 Databases:
 
     User-Accounts:
-        - _id
         - email_address
         - hashed_password
         - username
@@ -9,20 +8,25 @@ Databases:
         - assignments_id
 
     User-Assignments:
-        - _id
+        - account_id
         - semesters[]
-            - _id
             - name
             - start_date
             - end_date
             - classes[]
-                - _id
                 - name
                 - description
-                - instructor_info
+                - instructors[]
+                    - name
+                    - email_address
+                    - office_hours_info
+                - assignment_types[]
+                    - name
+                    - weight
                 - assignments[]
-                    - _id
                     - name
                     - notes
                     - due_date
                     - turned_in
+                    - assignment_type_id
+                    - grade
