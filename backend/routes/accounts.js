@@ -50,12 +50,12 @@ router.post('/register', async (req, res) => {
         if (!newAssignmentsDocument) throw Error('Error saving new assignments document')
 
         // Creating authentication token
-        const authToken = jsonwebtoken.sign({ _id: newAccount._id }, process.env.JWT_SECRET)
+        const authToken = jsonwebtoken.sign({ _id: newAccount._id }, process.env.JWT_SECRET, { expiresIn: 3600 })
         if (!authToken) throw Error('Error creating authentication token')
 
         return res.status(200).json({ token: authToken })
     } catch (error) {
-        res.status(500).json({ msg: error.message })
+        return res.status(500).json({ msg: error.message })
     }
 })
 
@@ -81,12 +81,28 @@ router.post('/login', async (req, res) => {
         const valid = compareSync(password, account.hashed_password)
         if (!valid) return res.status(401).json({ msg: 'Invalid credentials' })
 
-        const authToken = jsonwebtoken.sign({ _id: account._id }, process.env.JWT_SECRET)
+        const authToken = jsonwebtoken.sign({ _id: account._id }, process.env.JWT_SECRET, { expiresIn: 3600 })
         if (!authToken) throw Error('Error creating authentication token')
 
         return res.status(200).json({ token: authToken })
     } catch (error) {
-        res.status(500).json({ msg: error.message })
+        return res.status(500).json({ msg: error.message })
+    }
+})
+
+// @route   DELETE accounts/delete
+// @desc    Deletes a user account
+// @access  Private
+router.delete('/delete', auth, async (req, res) => {
+    try {
+        const deletedAccount = await Account.findByIdAndDelete(req.account_id)
+        if (!deletedAccount) return res.status(400).json({ msg: 'Account document with that account id could not be found' })
+        const deletedAssignments = await Assignments.findOneAndDelete({ account_id: req.account_id })
+        if (!deletedAssignments) return res.status(400).json({ msg: 'Assignments document with that account id could not be found' })
+
+        return res.status(200).json({ msg: 'Account successfully deleted' })
+    } catch (error) {
+        return res.status(500).json({ msg: error.message })
     }
 })
 
