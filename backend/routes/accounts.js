@@ -58,7 +58,7 @@ router.post('/register', async (req, res) => {
         if (!authToken) throw Error('Error creating authentication token')
 
         // Sending success response
-        return res.status(200).json({ token: authToken, msg: 'Account successfully registered' })
+        return res.status(200).json({ msg: 'Account successfully registered', token: authToken })
     } catch (error) {
         return res.status(500).json({ msg: error.message })
     }
@@ -94,7 +94,7 @@ router.post('/login', async (req, res) => {
         if (!authToken) throw Error('Error creating authentication token')
 
         // Sending success response
-        return res.status(200).json({ token: authToken, msg: 'Login successful' })
+        return res.status(200).json({ msg: 'Login successful', token: authToken })
     } catch (error) {
         return res.status(500).json({ msg: error.message })
     }
