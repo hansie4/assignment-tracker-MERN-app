@@ -11,6 +11,12 @@ async function checkAccountId(val) {
 
 const accountIdValidator = [checkAccountId, 'Assignments document with that account id already exists']
 
+function checkSemesterDates(val) {
+    return this.start_date <= val
+}
+
+const semesterDatesValidator = [checkSemesterDates, 'Semester end date must be after the start date']
+
 const AssignmentTypeSchema = new mongoose.Schema({
     name: {
         type: mongoose.Schema.Types.String,
@@ -103,7 +109,8 @@ const SemesterSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Date
     },
     end_date: {
-        type: mongoose.Schema.Types.Date
+        type: mongoose.Schema.Types.Date,
+        validate: semesterDatesValidator
     },
     classes: {
         type: [ClassSchema]
