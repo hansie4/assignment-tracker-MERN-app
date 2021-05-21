@@ -7,7 +7,7 @@ const { Assignments } = require('../models/assignments')
 
 const router = Router()
 
-/* Account Register, Login, and Delete Endpoints */
+/* -------------------------------------------------------- Account Register, Login, and Delete Endpoints */
 
 // @route   POST accounts/register
 // @desc    Registers a new user account
@@ -120,7 +120,7 @@ router.delete('/delete', auth, async (req, res) => {
     }
 })
 
-/* Account Information Update Endpoints */
+/* -------------------------------------------------------- Account Information Update Endpoints */
 
 // @route   PUT accounts/update/email
 // @desc    Updates a user account's email
@@ -131,16 +131,26 @@ router.put('/update/email', auth, async (req, res) => {
     // Checking that parameters are present
     if (!new_email_address) return res.status(400).json({ msg: 'New email address required' })
 
-    try {
-        // Updating the account document with the new information
-        const updatedAccount = await Account.findByIdAndUpdate(req.account_id, { email_address: new_email_address }, { runValidators: true })
-        if (!updatedAccount) return res.status(400).json({ msg: 'Account document with that account id could not be found' })
+    // Query
+    await Account.findById(req.account_id, (err, doc) => {
+        if (err) {
+            return res.status(400).json({ msg: err.message })
+        } else if (doc) {
+            // Making changes
+            doc.set({ email_address: new_email_address })
 
-        // Sending success response
-        return res.status(200).json({ msg: 'Email successfully updated' })
-    } catch (error) {
-        return res.status(500).json({ msg: error.message })
-    }
+            // Saving the changes
+            doc.save((err) => {
+                if (err) {
+                    return res.status(400).json({ msg: err.message })
+                } else {
+                    return res.status(200).json({ msg: 'Successfully updated email address' })
+                }
+            })
+        } else {
+            return res.status(404).json({ msg: 'Could not find account document for that account id' })
+        }
+    })
 })
 
 // @route   PUT accounts/update/username
@@ -152,16 +162,26 @@ router.put('/update/username', auth, async (req, res) => {
     // Checking that parameters are present
     if (!new_username) return res.status(400).json({ msg: 'New username required' })
 
-    try {
-        // Updating the account document with the new information
-        const updatedAccount = await Account.findByIdAndUpdate(req.account_id, { username: new_username }, { runValidators: true })
-        if (!updatedAccount) return res.status(400).json({ msg: 'Account document with that account id could not be found' })
+    // Query
+    await Account.findById(req.account_id, (err, doc) => {
+        if (err) {
+            return res.status(400).json({ msg: err.message })
+        } else if (doc) {
+            // Making changes
+            doc.set({ username: new_username })
 
-        // Sending success response
-        return res.status(200).json({ msg: 'Username successfully updated' })
-    } catch (error) {
-        return res.status(500).json({ msg: error.message })
-    }
+            // Saving the changes
+            doc.save((err) => {
+                if (err) {
+                    return res.status(400).json({ msg: err.message })
+                } else {
+                    return res.status(200).json({ msg: 'Successfully updated username' })
+                }
+            })
+        } else {
+            return res.status(404).json({ msg: 'Could not find account document for that account id' })
+        }
+    })
 })
 
 // @route   PUT accounts/update/password
@@ -182,16 +202,30 @@ router.put('/update/password', auth, async (req, res) => {
         // Encoding the password
         const new_hashed_password = hashSync(new_password)
         if (!new_hashed_password) throw Error('Error hashing new password')
-
-        // Updating the account document with the new information
-        const updatedAccount = await Account.findByIdAndUpdate(req.account_id, { hashed_password: new_hashed_password }, { runValidators: true })
-        if (!updatedAccount) return res.status(400).json({ msg: 'Account document with that account id could not be found' })
-
-        // Sending success response
-        return res.status(200).json({ msg: 'Password successfully updated' })
     } catch (error) {
         return res.status(500).json({ msg: error.message })
     }
+
+    // Query
+    await Account.findById(req.account_id, (err, doc) => {
+        if (err) {
+            return res.status(400).json({ msg: err.message })
+        } else if (doc) {
+            // Making changes
+            doc.set({ hashed_password: new_hashed_password })
+
+            // Saving the changes
+            doc.save((err) => {
+                if (err) {
+                    return res.status(400).json({ msg: err.message })
+                } else {
+                    return res.status(200).json({ msg: 'Successfully updated password' })
+                }
+            })
+        } else {
+            return res.status(404).json({ msg: 'Could not find account document for that account id' })
+        }
+    })
 })
 
 module.exports = router
