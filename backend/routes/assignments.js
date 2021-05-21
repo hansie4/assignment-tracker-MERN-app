@@ -1,7 +1,5 @@
 const { Router } = require('express')
 const auth = require('../middleware/auth')
-const { deleteOne } = require('../models/account')
-const Account = require('../models/account')
 const { Assignments, Semester, Class, Instructor, AssignmentType, Assignment } = require('../models/assignments')
 
 const router = Router()
