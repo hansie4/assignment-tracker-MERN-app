@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const accountRoute = require('./routes/accounts')
+const accountsRoute = require('./routes/accounts')
+const assignmentsRoute = require('./routes/assignments')
 
 /* ----------------------------------DEV---------------------------------- */
 // Load Environmental Variables
@@ -21,12 +22,14 @@ const app = express()
 app.use(express.json())
 
 // Use Routes
-app.use('/account', accountRoute)
+app.use('/account', accountsRoute)
+app.use('/assignments', assignmentsRoute)
 
 // Connect to Database
 mongoose.connect(process.env.DATABASE_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
 })
     .then(() => {
         console.log('Connected to MongoDB Database')
