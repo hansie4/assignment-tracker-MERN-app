@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 async function checkForDupicateEmailAddress(val) {
-    const dupe = await Account.findOne({ email_address: val })
+    const dupe = await Account.findOne({ _id: { $ne: this._id }, email_address: val })
     if (dupe) {
         return false
     } else {
@@ -12,7 +12,7 @@ async function checkForDupicateEmailAddress(val) {
 const emailValidator = [checkForDupicateEmailAddress, 'Account with that email already exists']
 
 async function checkForDupicateUsername(val) {
-    const dupe = await Account.findOne({ username: val })
+    const dupe = await Account.findOne({ _id: { $ne: this._id }, username: val })
     if (dupe) {
         return false
     } else {

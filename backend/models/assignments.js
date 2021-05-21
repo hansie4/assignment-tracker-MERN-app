@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 async function checkAccountId(val) {
-    const dupe = await Assignments.findOne({ account_id: val })
+    const dupe = await Assignments.findOne({ _id: { $ne: this._id }, account_id: val })
     if (dupe) {
         return false
     } else {
