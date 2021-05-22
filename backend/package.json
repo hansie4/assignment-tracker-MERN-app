@@ -1,7 +1,7 @@
 {
   "name": "assignment-tracker-backend",
-  "version": "0.0.1",
-  "description": "A MERN stack application to help students keep track of their assignments.",
+  "version": "0.1.0",
+  "description": "The backend for a MERN app to help students keep track of their assignments.",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
