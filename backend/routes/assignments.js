@@ -6,7 +6,7 @@ const router = Router()
 
 /* -------------------------------------------------------- Get All the User's Assignments Info Endpoint */
 
-// @route   GET assignments/semesters
+// @route   GET assignments/
 // @desc    Returns all the user's semesters information
 // @access  Private
 router.get('/', auth, async (req, res) => {
