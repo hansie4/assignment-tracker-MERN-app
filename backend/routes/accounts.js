@@ -64,8 +64,8 @@ router.post('/register', async (req, res) => {
     }
 })
 
-// @route   POST accounts/register
-// @desc    Registers a new user account
+// @route   POST accounts/login
+// @desc    Login a user to their account
 // @access  Public
 router.post('/login', async (req, res) => {
     const { username, password } = req.body
