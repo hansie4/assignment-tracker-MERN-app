@@ -1,9 +1,9 @@
-export const ADD_ERROR = 'ADD_ERROR'
-export const CLEAR_ERRORS = 'CLEAR_ERRORS'
+export const SET_ERROR = 'SET_ERROR'
+export const CLEAR_ERROR = 'CLEAR_ERROR'
 
-export const addError = (status_code, message) => {
+export const setError = (status_code, message) => {
     return {
-        type: ADD_ERROR,
+        type: SET_ERROR,
         payload: {
             status_code: status_code,
             message: message
@@ -11,8 +11,8 @@ export const addError = (status_code, message) => {
     }
 }
 
-export const clearErrors = () => {
+export const clearError = () => {
     return {
-        type: CLEAR_ERRORS
+        type: CLEAR_ERROR
     }
 }
