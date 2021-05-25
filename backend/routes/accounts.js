@@ -120,6 +120,15 @@ router.delete('/delete', auth, async (req, res) => {
     }
 })
 
+/* -------------------------------------------------------- Account Authentication Endpoints */
+
+// @route   POST accounts/
+// @desc    Athenticates user
+// @access  Public
+router.post('/', auth, async (req, res) => {
+    return res.status(200).json({ msg: 'Successfully authenticated' })
+})
+
 /* -------------------------------------------------------- Account Information Update Endpoints */
 
 // @route   PUT accounts/update/email
