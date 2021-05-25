@@ -79,10 +79,10 @@ router.post('/login', async (req, res) => {
         let account
         if (username.includes("@")) {
             account = await Account.findOne({ email_address: username })
-            if (!account) return res.status(400).json({ msg: 'Account with that email address does not exist' })
+            if (!account) return res.status(401).json({ msg: 'Invalid credentials' })
         } else {
             account = await Account.findOne({ username: username })
-            if (!account) return res.status(400).json({ msg: 'Account with that username does not exist' })
+            if (!account) return res.status(401).json({ msg: 'Invalid credentials' })
         }
 
         // Checking that the password is correct
