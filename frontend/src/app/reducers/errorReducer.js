@@ -1,27 +1,24 @@
 import {
-    ADD_ERROR,
-    CLEAR_ERRORS
+    SET_ERROR,
+    CLEAR_ERROR
 } from '../actions/errorActions'
 
 const initialState = {
-    errors: []
+    error: null
 }
 
 function errorReducerFunction(state = initialState, action) {
     switch (action.type) {
-        case ADD_ERROR:
+        case SET_ERROR:
             return {
-                errors: [
-                    ...state.errors,
-                    {
-                        status_code: action.payload.status_code,
-                        message: action.payload.message
-                    }
-                ]
+                error: {
+                    status_code: action.payload.status_code,
+                    message: action.payload.message
+                }
             }
-        case CLEAR_ERRORS:
+        case CLEAR_ERROR:
             return {
-                errors: []
+                error: null
             }
         default:
             return state
