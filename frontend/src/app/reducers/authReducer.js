@@ -1,4 +1,6 @@
 import {
+    USER_AUTH_SUCCESS,
+    USER_AUTH_FAILURE,
     USER_LOADING,
     USER_LOGIN_SUCCESS,
     USER_LOGIN_FAILURE,
@@ -17,7 +19,7 @@ import {
 
 const initialState = {
     isAuthenticated: false,
-    authToken: null,
+    authToken: localStorage.getItem('authToken'),
     isLoading: false
 }
 
@@ -28,17 +30,31 @@ function authReducerFunction(state = initialState, action) {
                 ...state,
                 isLoading: true
             }
+        case USER_AUTH_SUCCESS:
+            return {
+                ...state,
+                isAuthenticated: true,
+                isLoading: false
+            }
         case USER_LOGIN_SUCCESS:
         case USER_REGISTER_SUCCESS:
+            localStorage.setItem('authToken', action.payload.authToken)
             return {
                 isAuthenticated: true,
                 authToken: action.payload.authToken,
                 isLoading: false
             }
+        case USER_AUTH_FAILURE:
         case USER_LOGIN_FAILURE:
+        case USER_REGISTER_FAILURE:
+            return {
+                isAuthenticated: false,
+                authToken: null,
+                isLoading: false
+            }
         case USER_LOGOUT:
         case USER_DELETE_SUCCESS:
-        case USER_REGISTER_FAILURE:
+            localStorage.removeItem('authToken')
             return {
                 isAuthenticated: false,
                 authToken: null,
