@@ -1,48 +1,149 @@
 import { useState } from 'react'
 
-import { useHistory } from 'react-router-dom'
-
 import { connect } from 'react-redux'
-
 import { registerUser } from '../../actions/authActions'
-import { clearError } from '../../actions/errorActions'
+import { setError, clearError } from '../../actions/errorActions'
+
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Card from 'react-bootstrap/Card'
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button'
+import Spinner from 'react-bootstrap/Spinner'
+import Alert from 'react-bootstrap/Alert'
+
+import { FileEarmarkPersonFill } from 'react-bootstrap-icons'
 
 function RegisterPage(props) {
 
-    let history = useHistory()
-
     const [email_address, setEmail] = useState(null)
+    const [email_address_confirm, setEmailConfirm] = useState(null)
     const [username, setUsername] = useState(null)
     const [password, setPassword] = useState(null)
+    const [password_confirm, setPasswordConfirm] = useState(null)
+    const [showPassword, setShowPassword] = useState(false)
 
     return (
-        <div>
-            <h1>REGISTER PAGE</h1>
-            <input type='text' onChange={(event) => handleChange(event, setEmail)} />
-            <input type='text' onChange={(event) => handleChange(event, setUsername)} />
-            <input type='password' onChange={(event) => handleChange(event, setPassword)} />
-            <button onClick={() => register(email_address, username, password, props.registerUser())}>REGISTER</button>
-            <h2>{props.error ? JSON.stringify(props.error.message) : null}</h2>
-            <button onClick={() => history.push('/login')}>Register new account</button>
-        </div>
+        <Container fluid className='h-100'>
+            <Row className='h-100 justify-content-center'>
+                <Col sm={7} md={5} lg={4} xl={4} className='pt-5'>
+                    <Card>
+                        <Card.Header as='h1' className='text-center'>Register</Card.Header>
+                        <Card.Body>
+                            <Form noValidate>
+                                <Form.Group>
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter email address here'
+                                        onChange={(event) => handleChange(event, setEmail, props.clearError)}
+                                        disabled={props.isLoading}
+                                    />
+                                </Form.Group>
+                                <br />
+                                <Form.Group>
+                                    <Form.Label>Confirm Email</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Confirm email address here'
+                                        onChange={(event) => handleChange(event, setEmailConfirm, props.clearError)}
+                                        disabled={props.isLoading}
+                                    />
+                                </Form.Group>
+                                <br />
+                                <Form.Group>
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter username here'
+                                        onChange={(event) => handleChange(event, setUsername, props.clearError)}
+                                        disabled={props.isLoading}
+                                    />
+                                </Form.Group>
+                                <br />
+                                <Form.Group>
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control
+                                        className='mb-2'
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder='Enter your password here'
+                                        onChange={(event) => handleChange(event, setPassword, props.clearError)}
+                                        disabled={props.isLoading}
+                                    />
+                                </Form.Group>
+                                <br />
+                                <Form.Group>
+                                    <Form.Label>Confirm Password</Form.Label>
+                                    <Form.Control
+                                        className='mb-2'
+                                        type={showPassword ? 'text' : 'password'}
+                                        placeholder='Confirm your password here'
+                                        onChange={(event) => handleChange(event, setPasswordConfirm, props.clearError)}
+                                        disabled={props.isLoading}
+                                    />
+                                    <Form.Check type='checkbox' label='Show password' onChange={(event) => setShowPassword(event.target.checked)} />
+                                </Form.Group>
+                                <br />
+                                {
+                                    props.error ?
+                                        <Alert variant='danger'>{props.error.message}</Alert> :
+                                        null
+                                }
+                                <Form.Group className='d-flex justify-content-end'>
+                                    <Button className='w-100' onClick={() => register(email_address, email_address_confirm, username, password, password_confirm, props.registerUser, props.setError)}>
+                                        {
+                                            props.isLoading ?
+                                                <Spinner animation='border' size='sm' /> :
+                                                <FileEarmarkPersonFill size={20} />
+                                        }
+                                    </Button>
+                                </Form.Group>
+                            </Form>
+                        </Card.Body>
+                        <Card.Footer>
+                            <a href='/login'>Already have an account?</a>
+                        </Card.Footer>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
     )
 }
 
-function handleChange(event, setMethod) {
+function register(email_address, email_address_confirm, username, password, password_confirm, registerMethod, setErrorMethod) {
+    if (!email_address) {
+        setErrorMethod(null, 'Email address is required')
+    } else if (!email_address_confirm) {
+        setErrorMethod(null, 'Email address confirmation is required')
+    } else if (email_address !== email_address_confirm) {
+        setErrorMethod(null, 'Emails must match')
+    } else if (!username) {
+        setErrorMethod(null, 'Username is required')
+    } else if (!password) {
+        setErrorMethod(null, 'Password is required')
+    } else if (!password_confirm) {
+        setErrorMethod(null, 'Password confirmation is required')
+    } else if (password !== password_confirm) {
+        setErrorMethod(null, 'Passwords must match')
+    } else {
+        registerMethod(email_address, username, password)
+    }
+}
+
+function handleChange(event, setMethod, clearErrorMethod) {
+    clearErrorMethod()
     setMethod(event.target.value)
 }
 
-function register(email_address, username, password, registerMethod) {
-    registerMethod(email_address, username, password)
-}
-
 const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated,
+    isLoading: state.auth.isLoading,
     error: state.error.error
 })
 
 const mapDispatchToProps = {
     registerUser,
+    setError,
     clearError,
 }
 
