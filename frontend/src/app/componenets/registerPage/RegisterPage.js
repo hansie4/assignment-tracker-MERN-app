@@ -27,7 +27,7 @@ function RegisterPage(props) {
     return (
         <Container fluid className='h-100'>
             <Row className='h-100 justify-content-center'>
-                <Col sm={7} md={5} lg={4} xl={4} className='pt-5'>
+                <Col sm={7} md={5} lg={4} xl={4} className='pt-5 pb-5'>
                     <Card>
                         <Card.Header as='h1' className='text-center'>Register</Card.Header>
                         <Card.Body>

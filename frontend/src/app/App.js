@@ -28,7 +28,7 @@ function App({ isAuthenticated, authenticateUser, clearError }) {
 	}, [authenticateUser, clearError])
 
 	return (
-		<Container fluid className='min-vh-100 p-0 bg-dark bg-gradient' style={{ height: '1px' }}>
+		<Container fluid className='min-vh-100 h-100 p-0 bg-dark bg-gradient' style={{ height: '1px' }}>
 			<BrowserRouter>
 				<Switch>
 					<Route exact path='/login'>
