@@ -22,6 +22,7 @@ async function checkForDupicateUsername(val) {
 
 const usernameValidator = [checkForDupicateUsername, 'Account with that username already exists']
 
+
 const AccountSchema = new mongoose.Schema({
     email_address: {
         type: mongoose.Schema.Types.String,
@@ -50,6 +51,6 @@ const AccountSchema = new mongoose.Schema({
     }
 })
 
-const Account = mongoose.model('User_Account', AccountSchema)
+const Account = mongoose.model('Account', AccountSchema)
 
 module.exports = Account
