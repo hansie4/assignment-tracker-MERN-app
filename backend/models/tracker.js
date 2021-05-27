@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 async function checkAccountId(val) {
-    const dupe = await Assignments.findOne({ _id: { $ne: this._id }, account_id: val })
+    const dupe = await Tracker.findOne({ _id: { $ne: this._id }, account_id: val })
     if (dupe) {
         return false
     } else {
@@ -117,7 +117,7 @@ const SemesterSchema = new mongoose.Schema({
     }
 })
 
-const AssignmentsSchema = new mongoose.Schema({
+const TrackerSchema = new mongoose.Schema({
     account_id: {
         type: mongoose.Schema.Types.ObjectId,
         require: [true, 'Missing id to account'],
@@ -133,7 +133,7 @@ const Assignment = mongoose.model('Assignment', AssignmentSchema)
 const Instructor = mongoose.model('Instructor', InstructorSchema)
 const Class = mongoose.model('Class', ClassSchema)
 const Semester = mongoose.model('Semester', SemesterSchema)
-const Assignments = mongoose.model('User_Assignment', AssignmentsSchema)
+const Tracker = mongoose.model('Tracker', TrackerSchema)
 
 module.exports = {
     AssignmentType,
@@ -141,5 +141,5 @@ module.exports = {
     Instructor,
     Class,
     Semester,
-    Assignments
+    Tracker
 }
