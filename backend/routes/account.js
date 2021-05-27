@@ -3,6 +3,8 @@ const { hashSync, compareSync } = require('bcryptjs')
 const jsonwebtoken = require('jsonwebtoken')
 const auth = require('../middleware/auth')
 const Account = require('../models/account')
+const Token = require('../models/token')
+const { Tracker } = require('../models/tracker')
 
 const router = Router()
 
@@ -110,6 +112,27 @@ router.put('/update/password', auth, async (req, res) => {
             })
         } else {
             return res.status(404).json({ msg: 'Could not find account document for that account id' })
+        }
+    })
+})
+
+/* -------------------------------------------------------- Account Deletion Endpoints */
+
+// @route   DELETE account/delete
+// @desc    Deletes all the user's account information
+// @access  Private
+router.delete('/delete', auth, async (req, res) => {
+    await Account.findByIdAndDelete(req.account_id, async (err, doc) => {
+        if (err) {
+            return res.status(500).json({ msg: err.message })
+        } else if (doc) {
+            // Deleting associated documents
+            await Tracker.findOneAndDelete({ account_id: req.account_id })
+            await Token.deleteMany({ account_id: req.account_id })
+
+            return res.sendStatus(200)
+        } else {
+            return res.status(404).json({ msg: 'Account to delete not found' })
         }
     })
 })
