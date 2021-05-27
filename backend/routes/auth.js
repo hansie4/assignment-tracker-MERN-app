@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
                 path: '/auth',
                 secure: (process.env.NODE_ENVIRONMENT === 'production')
             })
-            return res.status(200).json({ access_token: accessToken, access_token_exp: parseInt(process.env.ACCESS_TOKEN_EXP) })
+            return res.status(200).json({ access_token: accessToken })
         } else {
             return res.status(404).json({ msg: 'Account with those credentials not found' })
         }
@@ -130,7 +130,7 @@ router.post('/register', async (req, res) => {
                     path: '/auth',
                     secure: (process.env.NODE_ENVIRONMENT === 'production')
                 })
-                return res.status(201).json({ access_token: accessToken, access_token_exp: parseInt(process.env.ACCESS_TOKEN_EXP) })
+                return res.status(201).json({ access_token: accessToken })
             })
             .catch((reason) => {
                 return res.status(400).json({ msg: reason.message })
@@ -183,7 +183,7 @@ router.get('/refresh', async (req, res) => {
             path: '/auth',
             secure: (process.env.NODE_ENVIRONMENT === 'production')
         })
-        return res.status(200).json({ access_token: accessToken, access_token_exp: parseInt(process.env.ACCESS_TOKEN_EXP) })
+        return res.status(200).json({ access_token: accessToken })
     } catch (error) {
         return res.status(500).json({ msg: error.message })
     }
