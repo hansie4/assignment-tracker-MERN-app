@@ -1,5 +1,17 @@
 const mongoose = require('mongoose')
 
+/* ----------------------------------DEV---------------------------------- */
+// Load Environmental Variables
+if (process.env.NODE_ENV === 'development') {
+    const dotenv = require('dotenv')
+    const environmentalVars = dotenv.config({ path: './configs.env' })
+    if (environmentalVars.error) {
+        throw environmentalVars.error
+    } else {
+        console.log('Environmental Variables Loaded in token.js')
+    }
+}
+
 const TokenSchema = new mongoose.Schema({
     token: {
         type: mongoose.Schema.Types.String,
@@ -12,8 +24,8 @@ const TokenSchema = new mongoose.Schema({
     },
     createdAt: {
         type: mongoose.Schema.Types.Date,
-        default: Date.now,
-        expires: `${process.env.REFRESH_TOKEN_EXP}s`
+        expires: parseInt(process.env.REFRESH_TOKEN_EXP),
+        default: Date.now
     }
 })
 
