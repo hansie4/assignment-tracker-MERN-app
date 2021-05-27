@@ -1,31 +1,30 @@
 const { Router } = require('express')
 const auth = require('../middleware/auth')
-const { Assignments, Semester, Class, Instructor, AssignmentType, Assignment } = require('../models/assignments')
+const { Tracker, Semester, Class, Instructor, AssignmentType, Assignment } = require('../models/tracker')
 
 const router = Router()
 
 /* -------------------------------------------------------- Get All the User's Assignments Info Endpoint */
 
-// @route   GET assignments/
+// @route   GET tracker/
 // @desc    Returns all the user's semesters information
 // @access  Private
 router.get('/', auth, async (req, res) => {
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
             // Sending success response
-            return res.status(200).json({ msg: 'Semesters successfully retrieved', semesters: doc.semesters })
+            return res.status(200).json({ semesters: doc.semesters })
         } else {
-            return res.status(404).json({ msg: 'Could not find assignments document for that account id' })
+            return res.status(404).json({ msg: 'Could not find tracker document for that account id' })
         }
     })
 })
 
 /* -------------------------------------------------------- Add, Delete, and Modify Semesters Endpoint */
 
-// @route   POST assignments/semester
+// @route   POST tracker/semester
 // @desc    Adds a new semester
 // @access  Private
 router.post('/semester', auth, async (req, res) => {
@@ -41,8 +40,7 @@ router.post('/semester', auth, async (req, res) => {
         end_date
     })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -54,7 +52,7 @@ router.post('/semester', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully added semester' })
+                    return res.sendStatus(201)
                 }
             })
         } else {
@@ -72,8 +70,7 @@ router.delete('/semester', auth, async (req, res) => {
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -88,7 +85,7 @@ router.delete('/semester', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully deleted semester' })
+                    return res.sendStatus(200)
                 }
             })
         } else {
@@ -108,7 +105,7 @@ router.put('/semester', auth, async (req, res) => {
     if (!new_name && !new_start_date && !new_end_date) return res.status(400).json({ msg: 'New value to update is required' })
 
     // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -125,7 +122,7 @@ router.put('/semester', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully updated semester' })
+                    return res.sendStatus(200)
                 }
             })
         } else {
@@ -152,8 +149,7 @@ router.post('/class', auth, async (req, res) => {
         description
     })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -168,7 +164,7 @@ router.post('/class', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully added class' })
+                    return res.sendStatus(201)
                 }
             })
         } else {
@@ -187,8 +183,7 @@ router.delete('/class', auth, async (req, res) => {
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
     if (!class_id) return res.status(400).json({ msg: 'Class id is required' })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -206,7 +201,7 @@ router.delete('/class', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully deleted class' })
+                    return res.sendStatus(200)
                 }
             })
         } else {
@@ -226,8 +221,7 @@ router.put('/class', auth, async (req, res) => {
     if (!class_id) return res.status(400).json({ msg: 'Class id is required' })
     if (!new_name && !new_start_date && !new_end_date) return res.status(400).json({ msg: 'New value to update is required' })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -246,7 +240,7 @@ router.put('/class', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully updated class' })
+                    return res.sendStatus(200)
                 }
             })
         } else {
@@ -275,8 +269,7 @@ router.post('/instructor', auth, async (req, res) => {
         office_hours_info
     })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -294,7 +287,7 @@ router.post('/instructor', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully added instructor' })
+                    return res.sendStatus(201)
                 }
             })
         } else {
@@ -314,8 +307,7 @@ router.delete('/instructor', auth, async (req, res) => {
     if (!class_id) return res.status(400).json({ msg: 'Class id is required' })
     if (!instructor_id) return res.status(400).json({ msg: 'Instructor id is required' })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -336,7 +328,7 @@ router.delete('/instructor', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully deleted instructor' })
+                    return res.sendStatus(200)
                 }
             })
         } else {
@@ -357,8 +349,7 @@ router.put('/instructor', auth, async (req, res) => {
     if (!instructor_id) return res.status(400).json({ msg: 'Instructor id is required' })
     if (!new_name && !new_email_address && !new_office_hours_info) return res.status(400).json({ msg: 'New value to update is required' })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -381,7 +372,7 @@ router.put('/instructor', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully updated instructor' })
+                    return res.sendStatus(200)
                 }
             })
         } else {
@@ -410,8 +401,7 @@ router.post('/assignment_type', auth, async (req, res) => {
         weight
     })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -429,7 +419,7 @@ router.post('/assignment_type', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully added assignment type' })
+                    return res.sendStatus(201)
                 }
             })
         } else {
@@ -449,8 +439,7 @@ router.delete('/assignment_type', auth, async (req, res) => {
     if (!class_id) return res.status(400).json({ msg: 'Class id is required' })
     if (!assignment_type_id) return res.status(400).json({ msg: 'Assignment_type id is required' })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -471,7 +460,7 @@ router.delete('/assignment_type', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully deleted assignment type' })
+                    return res.sendStatus(200)
                 }
             })
         } else {
@@ -492,8 +481,7 @@ router.put('/assignment_type', auth, async (req, res) => {
     if (!assignment_type_id) return res.status(400).json({ msg: 'Assignment_type id is required' })
     if (!new_name && !new_weight) return res.status(400).json({ msg: 'New value to update is required' })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -515,7 +503,7 @@ router.put('/assignment_type', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully updated assignment type' })
+                    return res.sendStatus(200)
                 }
             })
         } else {
@@ -547,8 +535,7 @@ router.post('/assignment', auth, async (req, res) => {
         grade
     })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -566,7 +553,7 @@ router.post('/assignment', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully added assignment' })
+                    return res.sendStatus(201)
                 }
             })
         } else {
@@ -587,7 +574,7 @@ router.delete('/assignment', auth, async (req, res) => {
     if (!assignment_id) return res.status(400).json({ msg: 'Assignment id is required' })
 
     // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -608,7 +595,7 @@ router.delete('/assignment', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully deleted assignment' })
+                    return res.sendStatus(200)
                 }
             })
         } else {
@@ -629,8 +616,7 @@ router.put('/assignment', auth, async (req, res) => {
     if (!assignment_id) return res.status(400).json({ msg: 'Assignment id is required' })
     if (!new_name && !new_notes && !new_due_date && !new_assignment_type_id && !new_turned_in && !new_grade) return res.status(400).json({ msg: 'New value to update is required' })
 
-    // Query
-    await Assignments.findOne({ account_id: req.account_id }, (err, doc) => {
+    await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
         } else if (doc) {
@@ -656,7 +642,7 @@ router.put('/assignment', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ msg: 'Successfully updated assignment' })
+                    return res.sendStatus(200)
                 }
             })
         } else {
