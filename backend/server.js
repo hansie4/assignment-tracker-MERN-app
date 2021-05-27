@@ -1,7 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
-const accountsRoute = require('./routes/accounts')
-const assignmentsRoute = require('./routes/assignments')
+const cookieParser = require('cookie-parser')
+const authRoute = require('./routes/auth')
+const accountsRoute = require('./routes/account')
+const trackerRoute = require('./routes/tracker')
 
 /* ----------------------------------DEV---------------------------------- */
 // Load Environmental Variables
@@ -18,18 +20,21 @@ if (process.env.NODE_ENV === 'development') {
 // Start Application
 const app = express()
 
-// Use JSON Middleware
+// Use Middleware
 app.use(express.json())
+app.use(cookieParser(process.env.COOKIE_SECRET))
 
 // Use Routes
+app.use('/auth', authRoute)
 app.use('/account', accountsRoute)
-app.use('/assignments', assignmentsRoute)
+app.use('/tracker', trackerRoute)
 
 // Connect to Database
 mongoose.connect(process.env.DATABASE_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useCreateIndex: true
 })
     .then(() => {
         console.log('Connected to MongoDB Database')
