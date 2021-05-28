@@ -8,6 +8,27 @@ const { Tracker } = require('../models/tracker')
 
 const router = Router()
 
+/* -------------------------------------------------------- Account Information Retrieval Endpoints */
+
+// @route   GET account/
+// @desc    Get a user's account information
+// @access  Private
+router.get('/', auth, async (req, res) => {
+    await Account.findById(req.account_id, 'email_address username date_registered', (err, doc) => {
+        if (err) {
+            return res.status(500).json({ msg: err.message })
+        } else if (doc) {
+            return res.status(200).json({
+                email_address: doc.email_address,
+                username: doc.username,
+                date_registered: date_registered
+            })
+        } else {
+            return res.sendStatus(404)
+        }
+    })
+})
+
 /* -------------------------------------------------------- Account Information Update Endpoints */
 
 // @route   PUT account/update/email
@@ -19,7 +40,6 @@ router.put('/update/email', auth, async (req, res) => {
     // Checking that parameters are present
     if (!new_email_address) return res.status(400).json({ msg: 'New email address required' })
 
-    // Query
     await Account.findById(req.account_id, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
@@ -50,7 +70,6 @@ router.put('/update/username', auth, async (req, res) => {
     // Checking that parameters are present
     if (!new_username) return res.status(400).json({ msg: 'New username required' })
 
-    // Query
     await Account.findById(req.account_id, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
@@ -94,7 +113,6 @@ router.put('/update/password', auth, async (req, res) => {
         return res.status(500).json({ msg: error.message })
     }
 
-    // Query
     await Account.findById(req.account_id, (err, doc) => {
         if (err) {
             return res.status(400).json({ msg: err.message })
