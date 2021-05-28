@@ -1,5 +1,7 @@
-export const SET_ERROR = 'SET_ERROR'
-export const CLEAR_ERROR = 'CLEAR_ERROR'
+import {
+    SET_ERROR,
+    CLEAR_ERROR
+} from './actionTypes'
 
 export const setError = (status_code, message) => {
     return {
