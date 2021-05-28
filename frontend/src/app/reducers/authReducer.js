@@ -1,74 +1,40 @@
 import {
-    USER_AUTH_SUCCESS,
-    USER_AUTH_FAILURE,
-    USER_LOADING,
-    USER_LOGIN_SUCCESS,
-    USER_LOGIN_FAILURE,
-    USER_LOGOUT,
-    USER_REGISTER_SUCCESS,
-    USER_REGISTER_FAILURE,
-    USER_DELETE_SUCCESS,
-    USER_DELETE_FAILURE,
-    USER_MODIFY_EMAIL_SUCCESS,
-    USER_MODIFY_EMAIL_FAILURE,
-    USER_MODIFY_USERNAME_SUCCESS,
-    USER_MODIFY_USERNAME_FAILURE,
-    USER_MODIFY_PASSWORD_SUCCESS,
-    USER_MODIFY_PASSWORD_FAILURE
-} from '../actions/authActions'
+    AUTH_LOADING,
+    AUTH_SUCCESS,
+    AUTH_FAILURE,
+    AUTH_REGISTER_FAILURE,
+    AUTH_REFRESH_FAILURE,
+    AUTH_LOGOUT,
+    AUTH_ERROR
+} from '../actions/actionTypes'
 
 const initialState = {
+    accessToken: null,
     isAuthenticated: false,
-    authToken: localStorage.getItem('authToken'),
     isLoading: false
 }
 
 function authReducerFunction(state = initialState, action) {
     switch (action.type) {
-        case USER_LOADING:
+        case AUTH_LOADING:
             return {
                 ...state,
                 isLoading: true
             }
-        case USER_AUTH_SUCCESS:
+        case AUTH_SUCCESS:
             return {
-                ...state,
+                accessToken: action.payload.accessToken,
                 isAuthenticated: true,
                 isLoading: false
             }
-        case USER_LOGIN_SUCCESS:
-        case USER_REGISTER_SUCCESS:
-            localStorage.setItem('authToken', action.payload.authToken)
+        case AUTH_FAILURE:
+        case AUTH_REGISTER_FAILURE:
+        case AUTH_REFRESH_FAILURE:
+        case AUTH_LOGOUT:
+        case AUTH_ERROR:
             return {
-                isAuthenticated: true,
-                authToken: action.payload.authToken,
-                isLoading: false
-            }
-        case USER_AUTH_FAILURE:
-        case USER_LOGIN_FAILURE:
-        case USER_REGISTER_FAILURE:
-            return {
+                accessToken: null,
                 isAuthenticated: false,
-                authToken: null,
-                isLoading: false
-            }
-        case USER_LOGOUT:
-        case USER_DELETE_SUCCESS:
-            localStorage.removeItem('authToken')
-            return {
-                isAuthenticated: false,
-                authToken: null,
-                isLoading: false
-            }
-        case USER_DELETE_FAILURE:
-        case USER_MODIFY_EMAIL_SUCCESS:
-        case USER_MODIFY_EMAIL_FAILURE:
-        case USER_MODIFY_USERNAME_SUCCESS:
-        case USER_MODIFY_USERNAME_FAILURE:
-        case USER_MODIFY_PASSWORD_SUCCESS:
-        case USER_MODIFY_PASSWORD_FAILURE:
-            return {
-                ...state,
                 isLoading: false
             }
         default:

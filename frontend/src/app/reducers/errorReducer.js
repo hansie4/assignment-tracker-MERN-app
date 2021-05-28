@@ -1,7 +1,7 @@
 import {
     SET_ERROR,
     CLEAR_ERROR
-} from '../actions/errorActions'
+} from '../actions/actionTypes'
 
 const initialState = {
     error: null
