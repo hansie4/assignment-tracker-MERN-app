@@ -5,11 +5,7 @@ const mongoose = require('mongoose')
 if (process.env.NODE_ENV === 'development') {
     const dotenv = require('dotenv')
     const environmentalVars = dotenv.config({ path: './configs.env' })
-    if (environmentalVars.error) {
-        throw environmentalVars.error
-    } else {
-        console.log('Environmental Variables Loaded in token.js')
-    }
+    if (environmentalVars.error) throw environmentalVars.error
 }
 
 const TokenSchema = new mongoose.Schema({
