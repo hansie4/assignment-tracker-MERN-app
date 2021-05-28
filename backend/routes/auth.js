@@ -189,9 +189,11 @@ router.get('/refresh', async (req, res) => {
     }
 })
 
+/* -------------------------------------------------------- Account Logout Endpoints */
+
 // @route   POST auth/logout
 // @desc    Removes the user's refresh token
-// @access  Private
+// @access  Public
 router.post('/logout', async (req, res) => {
     const refreshToken = req.signedCookies['refresh_token']
 
@@ -228,5 +230,35 @@ router.delete('/logout_all', auth, async (req, res) => {
         }
     })
 })
+
+/* -------------------------------------------------------- Account Recovery Endpoints */
+
+
+/* TO BE IMPLEMENTED */
+
+// @route   POST auth/recover
+// @desc    Sends a recovery link to the user's email address
+// @access  Public
+// router.post('/recover', async (req, res) => {
+//     const { email_address } = req.body
+
+//     // Checking that parameters are present
+//     if (!email_address) return res.status(400).json({ msg: 'Email address for account required' })
+
+//     // Finding their account in the database
+//     const account = await Account.findOne({ email_address: email_address })
+//     if (!account) return res.sendStatus(404)
+
+//     // Removing all refresh tokens associated with the user
+//     await Token.deleteMany({ account_id: account._id }, (err) => {
+//         if (err) {
+//             return res.status(500).json({ msg: err.message })
+//         } else {
+//             return res.sendStatus(200)
+//         }
+//     })
+
+
+// })
 
 module.exports = router
