@@ -194,7 +194,7 @@ router.get('/refresh', async (req, res) => {
 // @route   POST auth/logout
 // @desc    Removes the user's refresh token
 // @access  Public
-router.post('/logout', async (req, res) => {
+router.post('/logout', auth, async (req, res) => {
     const refreshToken = req.signedCookies['refresh_token']
 
     // Checking that parameters are present
