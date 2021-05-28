@@ -4,3 +4,4 @@ backend/configs.env
 
 .vscode/
 todo
+backend/jsdoc.json
