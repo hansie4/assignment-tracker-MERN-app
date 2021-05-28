@@ -9,53 +9,72 @@ import {
 
 import { connect } from 'react-redux'
 
+import { refreshToken } from './actions/authActions'
+import { clearError } from './actions/errorActions'
+
 import LoginPage from './componenets/loginPage/LoginPage'
 import RegisterPage from './componenets/registerPage/RegisterPage'
 import Dashboard from './componenets/dashboardPage/Dashboard'
 
-import { authenticateUser } from './actions/authActions'
-import { clearError } from './actions/errorActions'
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Spinner from 'react-bootstrap/Spinner'
 
-import { Container } from 'react-bootstrap'
-
-function App({ isAuthenticated, authenticateUser, clearError }) {
+function App({
+	isAuthenticated,
+	isAuthLoading,
+	refreshToken,
+	clearError
+}) {
 
 	useEffect(() => {
-		authenticateUser()
+		refreshToken()
 			.then(() => {
 				clearError()
 			})
-	}, [authenticateUser, clearError])
+	}, [refreshToken, clearError])
 
 	return (
 		<Container fluid className='min-vh-100 h-100 p-0 bg-dark bg-gradient' style={{ height: '1px' }}>
-			<BrowserRouter>
-				<Switch>
-					<Route exact path='/login'>
-						{isAuthenticated ? <Redirect to='/dashboard' /> : <LoginPage />}
-					</Route>
-					<Route exact path='/register'>
-						{isAuthenticated ? <Redirect to='/dashboard' /> : <RegisterPage />}
-					</Route>
-					<Route exact path='/dashboard'>
-						{isAuthenticated ? <Dashboard /> : <Redirect to='/login' />}
-					</Route>
-					<Route path='/'>
-						{isAuthenticated ? <Redirect to='/dashboard' /> : <Redirect to='/login' />}
-					</Route>
-				</Switch>
-			</BrowserRouter>
+			{
+				isAuthLoading ?
+					<Container className='pt-5'>
+						<Row className='pt-5'>
+							<Col className='pt-5 d-flex justify-content-center'>
+								<Spinner animation="border" variant='light' style={{ width: '5rem', height: '5rem' }} />
+							</Col>
+						</Row>
+					</Container>
+					:
+					<BrowserRouter>
+						<Switch>
+							<Route exact path='/login'>
+								{isAuthenticated ? <Redirect to='/dashboard' /> : <LoginPage />}
+							</Route>
+							<Route exact path='/register'>
+								{isAuthenticated ? <Redirect to='/dashboard' /> : <RegisterPage />}
+							</Route>
+							<Route exact path='/dashboard'>
+								{isAuthenticated ? <Dashboard /> : <Redirect to='/login' />}
+							</Route>
+							<Route path='/'>
+								{isAuthenticated ? <Redirect to='/dashboard' /> : <Redirect to='/login' />}
+							</Route>
+						</Switch>
+					</BrowserRouter>
+			}
 		</Container>
 	)
 }
 
 const mapStateToProps = state => ({
-	authToken: state.auth.authToken,
-	isAuthenticated: state.auth.isAuthenticated
+	isAuthenticated: state.auth.isAuthenticated,
+	isAuthLoading: state.auth.isLoading
 })
 
 const mapDispatchToProps = {
-	authenticateUser,
+	refreshToken,
 	clearError
 }
 
