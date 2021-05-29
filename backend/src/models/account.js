@@ -38,6 +38,7 @@ const AccountSchema = new mongoose.Schema({
     username: {
         type: mongoose.Schema.Types.String,
         required: [true, 'Username required'],
+        lowercase: true,
         match: [/^[a-zA-Z0-9_]{6,64}$/, 'Username must be 6 to 64 characters long and can only contain characters: a-z, A-Z, 0-9, and _'],
         validate: usernameValidator
     },

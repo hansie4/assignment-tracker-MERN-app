@@ -52,7 +52,7 @@ router.put('/update/email', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ new_email_address: new_email_address })
+                    return res.status(200).json({ new_email_address: new_email_address.toLowerCase() })
                 }
             })
         } else {
@@ -82,7 +82,7 @@ router.put('/update/username', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.status(200).json({ new_username: new_username })
+                    return res.status(200).json({ new_username: new_username.toLowerCase() })
                 }
             })
         } else {

@@ -20,7 +20,7 @@ router.post('/login', async (req, res) => {
     if (!username) return res.status(400).json({ msg: 'Username or email address required' })
     if (!password) return res.status(400).json({ msg: 'Password required' })
 
-    await Account.findOne({ $or: [{ email_address: username }, { username: username }] }, (err, doc) => {
+    await Account.findOne({ $or: [{ email_address: username.toLowerCase() }, { username: username.toLowerCase() }] }, (err, doc) => {
         if (err) {
             return res.status(500).json({ msg: err.message })
         } else if (doc) {
