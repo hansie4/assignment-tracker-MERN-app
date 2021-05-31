@@ -189,48 +189,6 @@ router.get('/refresh', async (req, res) => {
     }
 })
 
-/* -------------------------------------------------------- Account Logout Endpoints */
-
-// @route   POST auth/logout
-// @desc    Removes the user's refresh token
-// @access  Public
-router.post('/logout', auth, async (req, res) => {
-    const refreshToken = req.signedCookies['refresh_token']
-
-    // Checking that parameters are present
-    if (!refreshToken) return res.sendStatus(401)
-
-    // Deleting old refresh token
-    const deletedToken = await Token.findOneAndDelete({ token: refreshToken })
-    if (!deletedToken) {
-        return res.sendStatus(400)
-    } else {
-        // Removing the refresh token cookie
-        res.clearCookie('refresh_token', {
-            httpOnly: true,
-            signed: true,
-            expires: new Date(0),
-            path: '/auth',
-            secure: (process.env.NODE_ENVIRONMENT === 'production')
-        })
-        return res.sendStatus(200)
-    }
-})
-
-// @route   DELETE auth/logout_all
-// @desc    Removes all the user's refresh tokens
-// @access  Private
-router.delete('/logout_all', auth, async (req, res) => {
-    // Removing all refresh tokens associated with the user
-    await Token.deleteMany({ account_id: req.account_id }, (err) => {
-        if (err) {
-            return res.status(500).json({ msg: err.message })
-        } else {
-            return res.sendStatus(200)
-        }
-    })
-})
-
 /* -------------------------------------------------------- Account Recovery Endpoints */
 
 
