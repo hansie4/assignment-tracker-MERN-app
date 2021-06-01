@@ -21,7 +21,7 @@ router.get('/', auth, async (req, res) => {
             return res.status(200).json({
                 email_address: doc.email_address,
                 username: doc.username,
-                date_registered: date_registered
+                date_registered: doc.date_registered
             })
         } else {
             return res.sendStatus(404)
@@ -31,35 +31,37 @@ router.get('/', auth, async (req, res) => {
 
 /* -------------------------------------------------------- Account Information Update Endpoints */
 
+/* UPDATE EMAIL ENPOINT COMMENTED OUT BECAUSE I NO LONGER WANT USERS TO BE ABLE TO CHANGE THEIR ACCOUNT'S EMAIL ADDRESS */
+
 // @route   PUT account/update/email
 // @desc    Updates a user account's email
 // @access  Private
-router.put('/update/email', auth, async (req, res) => {
-    const { new_email_address } = req.body
+// router.put('/update/email', auth, async (req, res) => {
+//     const { new_email_address } = req.body
 
-    // Checking that parameters are present
-    if (!new_email_address) return res.status(400).json({ msg: 'New email address required' })
+//     // Checking that parameters are present
+//     if (!new_email_address) return res.status(400).json({ msg: 'New email address required' })
 
-    await Account.findById(req.account_id, (err, doc) => {
-        if (err) {
-            return res.status(400).json({ msg: err.message })
-        } else if (doc) {
-            // Making changes
-            doc.set({ email_address: new_email_address })
+//     await Account.findById(req.account_id, (err, doc) => {
+//         if (err) {
+//             return res.status(400).json({ msg: err.message })
+//         } else if (doc) {
+//             // Making changes
+//             doc.set({ email_address: new_email_address })
 
-            // Saving the changes
-            doc.save((err) => {
-                if (err) {
-                    return res.status(400).json({ msg: err.message })
-                } else {
-                    return res.status(200).json({ new_email_address: new_email_address.toLowerCase() })
-                }
-            })
-        } else {
-            return res.status(404).json({ msg: 'Could not find account document for that account id' })
-        }
-    })
-})
+//             // Saving the changes
+//             doc.save((err) => {
+//                 if (err) {
+//                     return res.status(400).json({ msg: err.message })
+//                 } else {
+//                     return res.status(200).json({ new_email_address: new_email_address.toLowerCase() })
+//                 }
+//             })
+//         } else {
+//             return res.status(404).json({ msg: 'Could not find account document for that account id' })
+//         }
+//     })
+// })
 
 // @route   PUT account/update/username
 // @desc    Updates a user account's username
@@ -147,6 +149,7 @@ router.post('/logout', auth, async (req, res) => {
 
     // Deleting old refresh token
     const deletedToken = await Token.findOneAndDelete({ token: refreshToken })
+
     if (!deletedToken) {
         return res.sendStatus(400)
     } else {
