@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const { hashSync, compareSync } = require('bcryptjs')
 const jsonwebtoken = require('jsonwebtoken')
-const auth = require('../middleware/auth')
+const nodemailer = require('nodemailer')
 const Account = require('../models/account')
 const Token = require('../models/token')
 const { Tracker } = require('../models/tracker')
@@ -191,32 +191,47 @@ router.get('/refresh', async (req, res) => {
 
 /* -------------------------------------------------------- Account Recovery Endpoints */
 
-
-/* TO BE IMPLEMENTED */
-
 // @route   POST auth/recover
 // @desc    Sends a recovery link to the user's email address
 // @access  Public
-// router.post('/recover', async (req, res) => {
-//     const { email_address } = req.body
+router.post('/recover', async (req, res) => {
+    const { email_address } = req.body
 
-//     // Checking that parameters are present
-//     if (!email_address) return res.status(400).json({ msg: 'Email address for account required' })
+    // Checking that parameters are present
+    if (!email_address) return res.status(400).json({ msg: 'Email address for account required' })
 
-//     // Finding their account in the database
-//     const account = await Account.findOne({ email_address: email_address })
-//     if (!account) return res.sendStatus(404)
+    // Finding their account in the database
+    const account = await Account.findOne({ email_address: email_address })
+    if (!account) return res.sendStatus(404)
 
-//     // Removing all refresh tokens associated with the user
-//     await Token.deleteMany({ account_id: account._id }, (err) => {
-//         if (err) {
-//             return res.status(500).json({ msg: err.message })
-//         } else {
-//             return res.sendStatus(200)
-//         }
-//     })
+    // Removing all refresh tokens associated with the user
+    await Token.deleteMany({ account_id: account._id })
 
+    // Creating access token
+    const accessToken = jsonwebtoken.sign({ _id: account._id }, process.env.JWT_ACCESS_TOKEN_SECRET, { expiresIn: parseInt(process.env.ACCESS_TOKEN_EXP) })
+    if (!accessToken) throw Error('Error creating access token')
 
-// })
+    // Send email with link to recover page with this token
+    try {
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USERNAME,
+                pass: process.env.EMAIL_PASSWORD
+            }
+        })
+
+        await transporter.sendMail({
+            from: process.env.EMAIL_USERNAME,
+            to: account.email_address,
+            subject: "Assignment Tracker Password Reset",
+            text: "http://localhost:3000/recover?accessToken=".concat(accessToken)
+        })
+
+        return res.sendStatus(200)
+    } catch (error) {
+        return res.status(500).json({ msg: error.message })
+    }
+})
 
 module.exports = router
