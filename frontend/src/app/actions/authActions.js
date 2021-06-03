@@ -2,21 +2,24 @@ import axios from 'axios'
 
 import {
     AUTH_LOADING,
+    AUTH_DONE_LOADING,
     AUTH_SUCCESS,
     AUTH_FAILURE,
-    AUTH_REGISTER_FAILURE,
-    AUTH_REFRESH_FAILURE,
     AUTH_LOGOUT,
-    AUTH_ERROR
-} from './actionTypes'
+    SERVER_ERROR,
+    CLIENT_ERROR
+} from '../actions/actionTypes'
 
 import {
     setError,
     clearError
 } from './errorActions'
 
-export const loginUser = (username, password) => async (dispatch, getState) => {
+export const loginUser = ({ username, password }) => async (dispatch, getState) => {
     dispatch({ type: AUTH_LOADING })
+
+    if (!username) dispatch({ type: AUTH_FAILURE })
+    if (!password) dispatch({ type: AUTH_FAILURE })
 
     const url = '/auth/login'
     const body = {
@@ -45,16 +48,22 @@ export const loginUser = (username, password) => async (dispatch, getState) => {
                 dispatch({ type: AUTH_FAILURE })
             } else if (error.request) {
                 dispatch(setError(500, 'No response from authentication server'))
-                dispatch({ type: AUTH_ERROR })
+                dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(400, 'Error creating login request'))
-                dispatch({ type: AUTH_ERROR })
+                dispatch(setError(0, 'Error creating register request'))
+                dispatch({ type: CLIENT_ERROR })
             }
         })
+
+    dispatch({ type: AUTH_DONE_LOADING })
 }
 
-export const registerUser = (email_address, username, password) => async (dispatch, getState) => {
+export const registerUser = ({ email_address, username, password }) => async (dispatch, getState) => {
     dispatch({ type: AUTH_LOADING })
+
+    if (!email_address) return dispatch({ type: AUTH_FAILURE })
+    if (!username) return dispatch({ type: AUTH_FAILURE })
+    if (!password) return dispatch({ type: AUTH_FAILURE })
 
     const url = '/auth/register'
     const body = {
@@ -77,24 +86,24 @@ export const registerUser = (email_address, username, password) => async (dispat
         .catch((error) => {
             if (error.response) {
                 dispatch(setError(error.response.status, error.response.data.msg))
-                dispatch({ type: AUTH_REGISTER_FAILURE })
+                dispatch({ type: AUTH_FAILURE })
             } else if (error.request) {
                 dispatch(setError(500, 'No response from authentication server'))
-                dispatch({ type: AUTH_ERROR })
+                dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(400, 'Error creating register request'))
-                dispatch({ type: AUTH_ERROR })
+                dispatch(setError(0, 'Error creating register request'))
+                dispatch({ type: CLIENT_ERROR })
             }
         })
+
+    dispatch({ type: AUTH_DONE_LOADING })
 }
 
 export const refreshToken = () => async (dispatch, getState) => {
-    dispatch({ type: AUTH_LOADING })
-
     const url = '/auth/refresh'
     const config = authTokenConfig(getState)
 
-    await axios.get(url, config)
+    return await axios.get(url, config)
         .then((response) => {
             dispatch(clearError())
             dispatch({
@@ -103,69 +112,58 @@ export const refreshToken = () => async (dispatch, getState) => {
                     accessToken: response.data.access_token
                 }
             })
+            return true
         })
         .catch((error) => {
             if (error.response) {
-                dispatch(setError(error.response.status, error.response.data.msg))
-                dispatch({ type: AUTH_REFRESH_FAILURE })
+                if (error.response.status !== 401) {
+                    dispatch(setError(error.response.status, error.response.data.msg))
+                    dispatch({ type: AUTH_FAILURE })
+                }
             } else if (error.request) {
                 dispatch(setError(500, 'No response from authentication server'))
-                dispatch({ type: AUTH_ERROR })
+                dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(400, 'Error access token refresh request'))
-                dispatch({ type: AUTH_ERROR })
+                dispatch(setError(0, 'Error access token refresh request'))
+                dispatch({ type: CLIENT_ERROR })
             }
+            return false
         })
 }
 
-export const logoutUser = () => async (dispatch, getState) => {
+export const recoveryEmail = ({ email_address }) => async (dispatch, getState) => {
     dispatch({ type: AUTH_LOADING })
 
-    const url = '/auth/logout'
-    const body = {}
+    if (!email_address) dispatch({ type: AUTH_FAILURE })
+
+    const url = '/auth/recover'
+    const body = {
+        email_address
+    }
     const config = authTokenConfig(getState)
 
     await axios.post(url, body, config)
         .then(() => {
             dispatch(clearError())
-            dispatch({ type: AUTH_LOGOUT })
         })
         .catch((error) => {
             if (error.response) {
-                dispatch(setError(error.response.status, error.response.data.msg))
-                dispatch({ type: AUTH_LOGOUT })
+                if (error.response.status === 401) {
+                    dispatch(setError(error.response.status, 'Invalid credentials'))
+                } else {
+                    dispatch(setError(error.response.status, error.response.data.msg))
+                }
+                dispatch({ type: AUTH_FAILURE })
             } else if (error.request) {
                 dispatch(setError(500, 'No response from authentication server'))
-                dispatch({ type: AUTH_ERROR })
+                dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(400, 'Error creating logout request'))
-                dispatch({ type: AUTH_ERROR })
+                dispatch(setError(0, 'Error creating register request'))
+                dispatch({ type: CLIENT_ERROR })
             }
         })
-}
 
-export const logoutAllUserDevices = () => async (dispatch, getState) => {
-    dispatch({ type: AUTH_LOADING })
-
-    const url = '/auth/logout_all'
-    const config = authTokenConfig(getState)
-
-    await axios.delete(url, config)
-        .then(() => {
-            dispatch(clearError())
-            dispatch({ type: AUTH_LOGOUT })
-        })
-        .catch((error) => {
-            if (error.response) {
-                dispatch(setError(error.response.status, error.response.data.msg))
-                dispatch({ type: AUTH_LOGOUT })
-            } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
-            } else {
-                dispatch(setError(400, 'Error creating logout request'))
-            }
-            dispatch({ type: AUTH_ERROR })
-        })
+    dispatch({ type: AUTH_DONE_LOADING })
 }
 
 export const authTokenConfig = getState => {
@@ -181,4 +179,23 @@ export const authTokenConfig = getState => {
     if (token) config.headers['Authorization'] = 'Bearer '.concat(token)
 
     return config
+}
+
+export const handle401Error = (actionToCallAfterRefresh, functionArgumentsObject, typesToDispatchOnFail) => async (dispatch) => {
+    const refreshSuccessful = await dispatch(refreshToken())
+
+    if (refreshSuccessful) {
+        await dispatch(actionToCallAfterRefresh(functionArgumentsObject))
+    } else {
+        typesToDispatchOnFail.forEach(type => {
+            dispatch({ type: type })
+        })
+        dispatch({ type: AUTH_LOGOUT })
+    }
+}
+
+export const initialAuthLoad = () => async (dispatch, getState) => {
+    dispatch({ type: AUTH_LOADING })
+    await dispatch(refreshToken())
+    dispatch({ type: AUTH_DONE_LOADING })
 }
