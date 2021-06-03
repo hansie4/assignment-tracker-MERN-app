@@ -225,7 +225,7 @@ router.post('/recover', async (req, res) => {
             from: process.env.EMAIL_USERNAME,
             to: account.email_address,
             subject: "Assignment Tracker Password Reset",
-            text: "http://localhost:3000/recover?accessToken=".concat(accessToken)
+            text: "http://localhost:3000/recover/".concat(accessToken)
         })
 
         return res.sendStatus(200)
