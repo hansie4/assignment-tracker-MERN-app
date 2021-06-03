@@ -1,14 +1,26 @@
+// --------------------------------- General Action Types ---------------------------------
+
+export const SERVER_ERROR = 'SERVER_ERROR'
+export const CLIENT_ERROR = 'CLIENT_ERROR'
+
 // --------------------------------- ERROR Action Types ---------------------------------
 
-export const SET_ERROR = 'SET_ERROR'
-export const CLEAR_ERROR = 'CLEAR_ERROR'
+export const ERROR_SET = 'ERROR_SET'
+export const ERROR_CLEAR = 'ERROR_CLEAR'
 
 // --------------------------------- AUTH Action Types ---------------------------------
 
 export const AUTH_LOADING = 'AUTH_LOADING'
+export const AUTH_DONE_LOADING = 'AUTH_DONE_LOADING'
 export const AUTH_SUCCESS = 'AUTH_SUCCESS'
 export const AUTH_FAILURE = 'AUTH_FAILURE'
-export const AUTH_REGISTER_FAILURE = 'AUTH_REGISTER_FAILURE'
-export const AUTH_REFRESH_FAILURE = 'AUTH_REFRESH_FAILURE'
 export const AUTH_LOGOUT = 'AUTH_LOGOUT'
-export const AUTH_ERROR = 'AUTH_ERROR'
+
+// --------------------------------- ACCOUNT Action Types ---------------------------------
+
+export const ACCOUNT_LOADING = 'ACCOUNT_LOADING'
+export const ACCOUNT_DONE_LOADING = 'ACCOUNT_DONE_LOADING'
+export const ACCOUNT_INFO_SUCCESS = 'ACCOUNT_INFO_SUCCESS'
+export const ACCOUNT_MODIFY_EMAIL_SUCCESS = 'ACCOUNT_MODIFY_EMAIL_SUCCESS'
+export const ACCOUNT_MODIFY_USERNAME_SUCCESS = 'ACCOUNT_MODIFY_USERNAME_SUCCESS'
+export const ACCOUNT_LOGOUT = 'ACCOUNT_LOGOUT'
