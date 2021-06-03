@@ -1,11 +1,11 @@
 import {
     AUTH_LOADING,
+    AUTH_DONE_LOADING,
     AUTH_SUCCESS,
     AUTH_FAILURE,
-    AUTH_REGISTER_FAILURE,
-    AUTH_REFRESH_FAILURE,
     AUTH_LOGOUT,
-    AUTH_ERROR
+    SERVER_ERROR,
+    CLIENT_ERROR
 } from '../actions/actionTypes'
 
 const initialState = {
@@ -21,22 +21,32 @@ function authReducerFunction(state = initialState, action) {
                 ...state,
                 isLoading: true
             }
-        case AUTH_SUCCESS:
+        case AUTH_DONE_LOADING:
             return {
-                accessToken: action.payload.accessToken,
-                isAuthenticated: true,
+                ...state,
                 isLoading: false
             }
-        case AUTH_FAILURE:
-        case AUTH_REGISTER_FAILURE:
-        case AUTH_REFRESH_FAILURE:
-        case AUTH_LOGOUT:
-        case AUTH_ERROR:
+        case AUTH_SUCCESS:
             return {
+                ...state,
+                accessToken: action.payload.accessToken,
+                isAuthenticated: true
+            }
+        case AUTH_FAILURE:
+            return {
+                ...state,
+                accessToken: null,
+                isAuthenticated: false
+            }
+        case AUTH_LOGOUT:
+            return {
+                ...state,
                 accessToken: null,
                 isAuthenticated: false,
                 isLoading: false
             }
+        case SERVER_ERROR:
+        case CLIENT_ERROR:
         default:
             return state
     }
