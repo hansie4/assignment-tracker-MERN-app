@@ -1,11 +1,11 @@
 import {
-    SET_ERROR,
-    CLEAR_ERROR
+    ERROR_SET,
+    ERROR_CLEAR
 } from './actionTypes'
 
 export const setError = (status_code, message) => {
     return {
-        type: SET_ERROR,
+        type: ERROR_SET,
         payload: {
             status_code: status_code,
             message: message
@@ -15,6 +15,6 @@ export const setError = (status_code, message) => {
 
 export const clearError = () => {
     return {
-        type: CLEAR_ERROR
+        type: ERROR_CLEAR
     }
 }
