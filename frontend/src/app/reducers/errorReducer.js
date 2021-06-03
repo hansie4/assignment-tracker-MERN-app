@@ -1,6 +1,6 @@
 import {
-    SET_ERROR,
-    CLEAR_ERROR
+    ERROR_SET,
+    ERROR_CLEAR
 } from '../actions/actionTypes'
 
 const initialState = {
@@ -9,14 +9,14 @@ const initialState = {
 
 function errorReducerFunction(state = initialState, action) {
     switch (action.type) {
-        case SET_ERROR:
+        case ERROR_SET:
             return {
                 error: {
                     status_code: action.payload.status_code,
                     message: action.payload.message
                 }
             }
-        case CLEAR_ERROR:
+        case ERROR_CLEAR:
             return {
                 error: null
             }
