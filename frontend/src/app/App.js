@@ -9,12 +9,14 @@ import {
 
 import { connect } from 'react-redux'
 
-import { refreshToken } from './actions/authActions'
-import { clearError } from './actions/errorActions'
+import { initialAuthLoad } from './actions/authActions'
 
 import LoginPage from './componenets/loginPage/LoginPage'
 import RegisterPage from './componenets/registerPage/RegisterPage'
 import Dashboard from './componenets/dashboardPage/Dashboard'
+import AccountPage from './componenets/accountPage/accountPage'
+import RecoveryPage from './componenets/recoveryPage/recoveryPage'
+import RecoveryPasswordPage from './componenets/recoveryPage/recoveryPasswordPage'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -24,16 +26,12 @@ import Spinner from 'react-bootstrap/Spinner'
 function App({
 	isAuthenticated,
 	isAuthLoading,
-	refreshToken,
-	clearError
+	initialAuthLoad
 }) {
 
 	useEffect(() => {
-		refreshToken()
-			.then(() => {
-				clearError()
-			})
-	}, [refreshToken, clearError])
+		initialAuthLoad()
+	}, [initialAuthLoad])
 
 	return (
 		<Container fluid className='min-vh-100 h-100 p-0 bg-dark bg-gradient' style={{ height: '1px' }}>
@@ -45,8 +43,7 @@ function App({
 								<Spinner animation="border" variant='light' style={{ width: '5rem', height: '5rem' }} />
 							</Col>
 						</Row>
-					</Container>
-					:
+					</Container> :
 					<BrowserRouter>
 						<Switch>
 							<Route exact path='/login'>
@@ -55,8 +52,17 @@ function App({
 							<Route exact path='/register'>
 								{isAuthenticated ? <Redirect to='/dashboard' /> : <RegisterPage />}
 							</Route>
+							<Route exact path='/recover'>
+								{isAuthenticated ? <Redirect to='/dashboard' /> : <RecoveryPage />}
+							</Route>
+							<Route exact path='/recover/:accessToken'>
+								{isAuthenticated ? <Redirect to='/dashboard' /> : <RecoveryPasswordPage />}
+							</Route>
 							<Route exact path='/dashboard'>
 								{isAuthenticated ? <Dashboard /> : <Redirect to='/login' />}
+							</Route>
+							<Route exact path='/account'>
+								{isAuthenticated ? <AccountPage /> : <Redirect to='/login' />}
 							</Route>
 							<Route path='/'>
 								{isAuthenticated ? <Redirect to='/dashboard' /> : <Redirect to='/login' />}
@@ -74,8 +80,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-	refreshToken,
-	clearError
+	initialAuthLoad
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
