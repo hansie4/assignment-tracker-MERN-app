@@ -2,7 +2,10 @@ import { useState } from 'react'
 
 import { connect } from 'react-redux'
 import { registerUser } from '../../actions/authActions'
-import { setError, clearError } from '../../actions/errorActions'
+import {
+    setError,
+    clearError
+} from '../../actions/errorActions'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -29,7 +32,7 @@ function RegisterPage(props) {
             <Row className='h-100 justify-content-center'>
                 <Col sm={7} md={5} lg={4} xl={4} className='pt-5 pb-5'>
                     <Card>
-                        <Card.Header as='h1' className='text-center'>Register</Card.Header>
+                        <Card.Header as='h3' className='text-center'>Register New Assignment Tracker Account</Card.Header>
                         <Card.Body>
                             <Form noValidate>
                                 <Form.Group>
@@ -90,14 +93,15 @@ function RegisterPage(props) {
                                         <Alert variant='danger'>{props.error.message}</Alert> :
                                         null
                                 }
-                                <Form.Group className='d-flex justify-content-end'>
+                                <Form.Group>
                                     <Button className='w-100' onClick={() => register(email_address, email_address_confirm, username, password, password_confirm, props.registerUser, props.setError)}>
                                         {
                                             props.isLoading ?
                                                 <Spinner animation='border' size='sm' /> :
-                                                <FileEarmarkPersonFill size={20} />
+                                                <span>Register<FileEarmarkPersonFill className='ms-2' size={20} /></span>
                                         }
                                     </Button>
+                                    <Form.Text className='text-muted'>By creating an account you accept cookies from this website.</Form.Text>
                                 </Form.Group>
                             </Form>
                         </Card.Body>
@@ -111,7 +115,7 @@ function RegisterPage(props) {
     )
 }
 
-function register(email_address, email_address_confirm, username, password, password_confirm, registerMethod, setErrorMethod) {
+const register = (email_address, email_address_confirm, username, password, password_confirm, registerMethod, setErrorMethod) => {
     if (!email_address) {
         setErrorMethod(null, 'Email address is required')
     } else if (!email_address_confirm) {
@@ -127,11 +131,11 @@ function register(email_address, email_address_confirm, username, password, pass
     } else if (password !== password_confirm) {
         setErrorMethod(null, 'Passwords must match')
     } else {
-        registerMethod(email_address, username, password)
+        registerMethod({ email_address, username, password })
     }
 }
 
-function handleChange(event, setMethod, clearErrorMethod) {
+const handleChange = (event, setMethod, clearErrorMethod) => {
     clearErrorMethod()
     setMethod(event.target.value)
 }
