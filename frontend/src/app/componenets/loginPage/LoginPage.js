@@ -2,7 +2,10 @@ import { useState } from 'react'
 
 import { connect } from 'react-redux'
 import { loginUser } from '../../actions/authActions'
-import { setError, clearError } from '../../actions/errorActions'
+import {
+    setError,
+    clearError
+} from '../../actions/errorActions'
 
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
@@ -26,9 +29,9 @@ function LoginPage(props) {
             <Row className='h-100 justify-content-center'>
                 <Col sm={7} md={5} lg={4} xl={4} className='pt-5 pb-5'>
                     <Card>
-                        <Card.Header as='h1' className='text-center'>Login</Card.Header>
+                        <Card.Header as='h3' className='text-center'>Assignment Tracker Login</Card.Header>
                         <Card.Body>
-                            <Form noValidate>
+                            <Form noValidate onSubmit={(event) => login(event, username, password, props.loginUser, props.setError)}>
                                 <Form.Group>
                                     <Form.Label>Email/Username</Form.Label>
                                     <Form.Control
@@ -57,18 +60,19 @@ function LoginPage(props) {
                                         null
                                 }
                                 <Form.Group className='d-flex justify-content-end'>
-                                    <Button className='w-100' onClick={() => login(username, password, props.loginUser, props.setError)}>
+                                    <Button type='submit' disabled={props.isLoading} className='w-100'>
                                         {
                                             props.isLoading ?
                                                 <Spinner animation='border' size='sm' /> :
-                                                <BoxArrowInRight size={20} />
+                                                <span>Login<BoxArrowInRight className='ms-2' size={20} /></span>
                                         }
                                     </Button>
                                 </Form.Group>
                             </Form>
                         </Card.Body>
-                        <Card.Footer>
+                        <Card.Footer className='d-flex justify-content-between'>
                             <a href='/register'>Dont have an account?</a>
+                            <a href='/recover'>Forgot password?</a>
                         </Card.Footer>
                     </Card>
                 </Col>
@@ -77,17 +81,18 @@ function LoginPage(props) {
     )
 }
 
-function login(username, password, loginMethod, setErrorMethod) {
+const login = (event, username, password, loginMethod, setErrorMethod) => {
+    event.preventDefault()
     if (!username) {
         setErrorMethod(null, 'Username is required')
     } else if (!password) {
         setErrorMethod(null, 'Password is required')
     } else {
-        loginMethod(username, password)
+        loginMethod({ username, password })
     }
 }
 
-function handleChange(event, setMethod, clearErrorMethod) {
+const handleChange = (event, setMethod, clearErrorMethod) => {
     clearErrorMethod()
     setMethod(event.target.value)
 }
