@@ -36,32 +36,36 @@ router.get('/', auth, async (req, res) => {
 // @route   PUT account/update/email
 // @desc    Updates a user account's email
 // @access  Private
-// router.put('/update/email', auth, async (req, res) => {
-//     const { new_email_address } = req.body
+router.put('/update/email', auth, async (req, res) => {
+    const { new_email_address } = req.body
 
-//     // Checking that parameters are present
-//     if (!new_email_address) return res.status(400).json({ msg: 'New email address required' })
+    // Checking that parameters are present
+    if (!new_email_address) return res.status(400).json({ msg: 'New email address required' })
 
-//     await Account.findById(req.account_id, (err, doc) => {
-//         if (err) {
-//             return res.status(400).json({ msg: err.message })
-//         } else if (doc) {
-//             // Making changes
-//             doc.set({ email_address: new_email_address })
+    // Checking that an account with that email doesnt already exist
+    const account = await Account.findOne({ email_address: new_email_address })
+    if (account) return res.status(400).json({ msg: 'Account with that email already exists' })
 
-//             // Saving the changes
-//             doc.save((err) => {
-//                 if (err) {
-//                     return res.status(400).json({ msg: err.message })
-//                 } else {
-//                     return res.status(200).json({ new_email_address: new_email_address.toLowerCase() })
-//                 }
-//             })
-//         } else {
-//             return res.status(404).json({ msg: 'Could not find account document for that account id' })
-//         }
-//     })
-// })
+    await Account.findById(req.account_id, (err, doc) => {
+        if (err) {
+            return res.status(400).json({ msg: err.message })
+        } else if (doc) {
+            // Making changes
+            doc.set({ email_address: new_email_address })
+
+            // Saving the changes
+            doc.save((err) => {
+                if (err) {
+                    return res.status(400).json({ msg: err.message })
+                } else {
+                    return res.status(200).json({ new_email_address: new_email_address.toLowerCase() })
+                }
+            })
+        } else {
+            return res.status(404).json({ msg: 'Could not find account document for that account id' })
+        }
+    })
+})
 
 // @route   PUT account/update/username
 // @desc    Updates a user account's username
