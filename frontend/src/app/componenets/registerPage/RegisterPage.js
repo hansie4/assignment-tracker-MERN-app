@@ -118,14 +118,20 @@ function RegisterPage(props) {
 const register = (email_address, email_address_confirm, username, password, password_confirm, registerMethod, setErrorMethod) => {
     if (!email_address) {
         setErrorMethod(null, 'Email address is required')
+    } else if (!(/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/.test(email_address))) {
+        setErrorMethod(null, 'Invalid email format')
     } else if (!email_address_confirm) {
         setErrorMethod(null, 'Email address confirmation is required')
     } else if (email_address !== email_address_confirm) {
         setErrorMethod(null, 'Emails must match')
     } else if (!username) {
         setErrorMethod(null, 'Username is required')
+    } else if (!(/^[a-zA-Z0-9_]{6,64}$/.test(username))) {
+        setErrorMethod(null, 'Username must be 6 to 64 characters long and can only contain characters: a-z, A-Z, 0-9, and _')
     } else if (!password) {
         setErrorMethod(null, 'Password is required')
+    } else if (!(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,256}$/.test(password))) {
+        setErrorMethod(null, 'Password must be atleast 8 characters and contain one of each: lowercase letter, uppercase letter, number, and symbol')
     } else if (!password_confirm) {
         setErrorMethod(null, 'Password confirmation is required')
     } else if (password !== password_confirm) {
