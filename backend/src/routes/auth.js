@@ -51,7 +51,6 @@ router.post('/login', async (req, res) => {
                 httpOnly: true,
                 signed: true,
                 maxAge: (parseInt(process.env.REFRESH_TOKEN_EXP) * 1000),
-                path: '/auth',
                 secure: (process.env.NODE_ENVIRONMENT === 'production')
             })
             return res.status(200).json({ access_token: accessToken })
@@ -127,7 +126,6 @@ router.post('/register', async (req, res) => {
                     httpOnly: true,
                     signed: true,
                     maxAge: (parseInt(process.env.REFRESH_TOKEN_EXP) * 1000),
-                    path: '/auth',
                     secure: (process.env.NODE_ENVIRONMENT === 'production')
                 })
                 return res.status(201).json({ access_token: accessToken })
@@ -180,7 +178,6 @@ router.get('/refresh', async (req, res) => {
             httpOnly: true,
             signed: true,
             maxAge: (parseInt(process.env.REFRESH_TOKEN_EXP) * 1000),
-            path: '/auth',
             secure: (process.env.NODE_ENVIRONMENT === 'production')
         })
         return res.status(200).json({ access_token: accessToken })

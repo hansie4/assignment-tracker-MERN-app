@@ -111,9 +111,11 @@ router.put('/update/password', auth, async (req, res) => {
         return res.status(400).json({ msg: 'New password must be atleast 8 characters and contain one of each: lowercase letter, uppercase letter, number, and symbol' })
     }
 
+    let new_hashed_password
+
     try {
         // Encoding the password
-        const new_hashed_password = hashSync(new_password)
+        new_hashed_password = hashSync(new_password)
         if (!new_hashed_password) throw Error('Error hashing new password')
     } catch (error) {
         return res.status(500).json({ msg: error.message })
@@ -142,34 +144,24 @@ router.put('/update/password', auth, async (req, res) => {
 
 /* -------------------------------------------------------- Account Logout Endpoints */
 
-// @route   POST auth/logout
+// @route   DELETE account/logout
 // @desc    Removes the user's refresh token
 // @access  Public
-router.post('/logout', auth, async (req, res) => {
+router.delete('/logout', auth, async (req, res) => {
     const refreshToken = req.signedCookies['refresh_token']
 
     // Checking that parameters are present
     if (!refreshToken) return res.sendStatus(401)
 
     // Deleting old refresh token
-    const deletedToken = await Token.findOneAndDelete({ token: refreshToken })
+    await Token.findOneAndDelete({ token: refreshToken })
 
-    if (!deletedToken) {
-        return res.sendStatus(400)
-    } else {
-        // Removing the refresh token cookie
-        res.clearCookie('refresh_token', {
-            httpOnly: true,
-            signed: true,
-            expires: new Date(0),
-            path: '/auth',
-            secure: (process.env.NODE_ENVIRONMENT === 'production')
-        })
-        return res.sendStatus(200)
-    }
+    // Removing the refresh token cookie
+    res.clearCookie('refresh_token')
+    return res.sendStatus(200)
 })
 
-// @route   DELETE auth/logout_all
+// @route   DELETE account/logout_all
 // @desc    Removes all the user's refresh tokens
 // @access  Private
 router.delete('/logout_all', auth, async (req, res) => {
