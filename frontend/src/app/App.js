@@ -18,6 +18,7 @@ import AccountPage from './componenets/accountPage/accountPage'
 import RecoveryPage from './componenets/recoveryPage/recoveryPage'
 import RecoveryPasswordPage from './componenets/recoveryPage/recoveryPasswordPage'
 
+import { Scrollbars } from 'react-custom-scrollbars-2'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
@@ -34,43 +35,50 @@ function App({
 	}, [initialAuthLoad])
 
 	return (
-		<Container fluid className='min-vh-100 h-100 p-0 bg-dark bg-gradient' style={{ height: '1px' }}>
-			{
-				isAuthLoading ?
-					<Container className='pt-5'>
-						<Row className='pt-5'>
-							<Col className='pt-5 d-flex justify-content-center'>
-								<Spinner animation="border" variant='light' style={{ width: '5rem', height: '5rem' }} />
-							</Col>
-						</Row>
-					</Container> :
-					<BrowserRouter>
-						<Switch>
-							<Route exact path='/login'>
-								{isAuthenticated ? <Redirect to='/dashboard' /> : <LoginPage />}
-							</Route>
-							<Route exact path='/register'>
-								{isAuthenticated ? <Redirect to='/dashboard' /> : <RegisterPage />}
-							</Route>
-							<Route exact path='/recover'>
-								{isAuthenticated ? <Redirect to='/dashboard' /> : <RecoveryPage />}
-							</Route>
-							<Route exact path='/recover/:accessToken'>
-								{isAuthenticated ? <Redirect to='/dashboard' /> : <RecoveryPasswordPage />}
-							</Route>
-							<Route exact path='/dashboard'>
-								{isAuthenticated ? <Dashboard /> : <Redirect to='/login' />}
-							</Route>
-							<Route exact path='/account'>
-								{isAuthenticated ? <AccountPage /> : <Redirect to='/login' />}
-							</Route>
-							<Route path='/'>
-								{isAuthenticated ? <Redirect to='/dashboard' /> : <Redirect to='/login' />}
-							</Route>
-						</Switch>
-					</BrowserRouter>
-			}
-		</Container>
+		<Scrollbars
+			autoHide
+			autoHideTimeout={1000}
+			autoHideDuration={200}
+			style={{ width: '100%', height: '100vh' }}
+		>
+			<Container fluid className='min-vh-100 h-100 p-0 bg-dark bg-gradient' style={{ height: '1px' }}>
+				{
+					isAuthLoading ?
+						<Container className='pt-5'>
+							<Row className='pt-5'>
+								<Col className='pt-5 d-flex justify-content-center'>
+									<Spinner animation="border" variant='light' style={{ width: '5rem', height: '5rem' }} />
+								</Col>
+							</Row>
+						</Container> :
+						<BrowserRouter>
+							<Switch>
+								<Route exact path='/login'>
+									{isAuthenticated ? <Redirect to='/dashboard' /> : <LoginPage />}
+								</Route>
+								<Route exact path='/register'>
+									{isAuthenticated ? <Redirect to='/dashboard' /> : <RegisterPage />}
+								</Route>
+								<Route exact path='/recover'>
+									{isAuthenticated ? <Redirect to='/dashboard' /> : <RecoveryPage />}
+								</Route>
+								<Route exact path='/recover/:accessToken'>
+									{isAuthenticated ? <Redirect to='/dashboard' /> : <RecoveryPasswordPage />}
+								</Route>
+								<Route exact path='/dashboard'>
+									{isAuthenticated ? <Dashboard /> : <Redirect to='/login' />}
+								</Route>
+								<Route exact path='/account'>
+									{isAuthenticated ? <AccountPage /> : <Redirect to='/login' />}
+								</Route>
+								<Route path='/'>
+									{isAuthenticated ? <Redirect to='/dashboard' /> : <Redirect to='/login' />}
+								</Route>
+							</Switch>
+						</BrowserRouter>
+				}
+			</Container>
+		</Scrollbars>
 	)
 }
 
