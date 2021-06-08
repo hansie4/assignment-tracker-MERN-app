@@ -47,10 +47,10 @@ export const loginUser = ({ username, password }) => async (dispatch, getState) 
                 }
                 dispatch({ type: AUTH_FAILURE })
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error creating register request'))
+                dispatch(setError(0, 'Error creating request'))
                 dispatch({ type: CLIENT_ERROR })
             }
         })
@@ -88,10 +88,10 @@ export const registerUser = ({ email_address, username, password }) => async (di
                 dispatch(setError(error.response.status, error.response.data.msg))
                 dispatch({ type: AUTH_FAILURE })
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error creating register request'))
+                dispatch(setError(0, 'Error creating request'))
                 dispatch({ type: CLIENT_ERROR })
             }
         })
@@ -121,10 +121,10 @@ export const refreshToken = () => async (dispatch, getState) => {
                     dispatch({ type: AUTH_FAILURE })
                 }
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error access token refresh request'))
+                dispatch(setError(0, 'Error access token request'))
                 dispatch({ type: CLIENT_ERROR })
             }
             return false
@@ -155,10 +155,10 @@ export const recoveryEmail = ({ email_address }) => async (dispatch, getState) =
                 }
                 dispatch({ type: AUTH_FAILURE })
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error creating register request'))
+                dispatch(setError(0, 'Error creating request'))
                 dispatch({ type: CLIENT_ERROR })
             }
         })

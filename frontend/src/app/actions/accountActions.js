@@ -50,10 +50,10 @@ export const getAccountInfo = () => async (dispatch, getState) => {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error creating login request'))
+                dispatch(setError(0, 'Error creating request'))
                 dispatch({ type: CLIENT_ERROR })
             }
         })
@@ -93,10 +93,10 @@ export const changeEmailAddress = ({ new_email_address }) => async (dispatch, ge
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error creating login request'))
+                dispatch(setError(0, 'Error creating request'))
                 dispatch({ type: CLIENT_ERROR })
             }
         })
@@ -136,10 +136,10 @@ export const changeUsername = ({ new_username }) => async (dispatch, getState) =
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error creating login request'))
+                dispatch(setError(0, 'Error creating request'))
                 dispatch({ type: CLIENT_ERROR })
             }
         })
@@ -184,10 +184,10 @@ export const changePassword = ({ new_password, accessToken }) => async (dispatch
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error creating login request'))
+                dispatch(setError(0, 'Error creating request'))
                 dispatch({ type: CLIENT_ERROR })
             }
         })
@@ -213,10 +213,10 @@ export const logoutUser = () => async (dispatch, getState) => {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error creating logout request'))
+                dispatch(setError(0, 'Error creating request'))
                 dispatch({ type: CLIENT_ERROR })
             }
         })
@@ -244,10 +244,10 @@ export const logoutUserAllDevices = () => async (dispatch, getState) => {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error creating logout request'))
+                dispatch(setError(0, 'Error creating request'))
                 dispatch({ type: CLIENT_ERROR })
             }
         })
@@ -275,10 +275,10 @@ export const deleteAccount = () => async (dispatch, getState) => {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
             } else if (error.request) {
-                dispatch(setError(500, 'No response from authentication server'))
+                dispatch(setError(500, 'No response from server'))
                 dispatch({ type: SERVER_ERROR })
             } else {
-                dispatch(setError(0, 'Error creating login request'))
+                dispatch(setError(0, 'Error creating request'))
                 dispatch({ type: CLIENT_ERROR })
             }
         })
