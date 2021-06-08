@@ -64,7 +64,10 @@ export const getAccountInfo = () => async (dispatch, getState) => {
 export const changeEmailAddress = ({ new_email_address }) => async (dispatch, getState) => {
     dispatch({ type: ACCOUNT_LOADING })
 
-    if (!new_email_address) return dispatch(setError(400, 'New email address is required'))
+    if (!new_email_address) {
+        dispatch(setError(400, 'New email address is required'))
+        return dispatch({ type: ACCOUNT_DONE_LOADING })
+    }
 
     const url = '/account/update/email'
     const body = {
@@ -104,7 +107,10 @@ export const changeEmailAddress = ({ new_email_address }) => async (dispatch, ge
 export const changeUsername = ({ new_username }) => async (dispatch, getState) => {
     dispatch({ type: ACCOUNT_LOADING })
 
-    if (!new_username) return dispatch(setError(400, 'New username is required'))
+    if (!new_username) {
+        dispatch(setError(400, 'New username is required'))
+        return dispatch({ type: ACCOUNT_DONE_LOADING })
+    }
 
     const url = '/account/update/username'
     const body = {
@@ -144,7 +150,10 @@ export const changeUsername = ({ new_username }) => async (dispatch, getState) =
 export const changePassword = ({ new_password, accessToken }) => async (dispatch, getState) => {
     dispatch({ type: ACCOUNT_LOADING })
 
-    if (!new_password) return dispatch(setError(400, 'New password is required'))
+    if (!new_password) {
+        dispatch(setError(400, 'New password is required'))
+        return dispatch({ type: ACCOUNT_DONE_LOADING })
+    }
 
     const url = '/account/update/password'
     const body = {
@@ -190,10 +199,9 @@ export const logoutUser = () => async (dispatch, getState) => {
     dispatch({ type: AUTH_LOADING })
 
     const url = '/account/logout'
-    const body = {}
     const config = authTokenConfig(getState)
 
-    await axios.post(url, body, config)
+    await axios.delete(url, config)
         .then(() => {
             dispatch(clearError())
         })
