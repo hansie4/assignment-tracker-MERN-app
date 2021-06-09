@@ -20,4 +20,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {}
 
-export default connect(mapStateToProps, mapDispatchToProps)(InfoPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(InfoPanel)

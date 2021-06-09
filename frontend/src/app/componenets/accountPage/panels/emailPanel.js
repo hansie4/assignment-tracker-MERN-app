@@ -90,4 +90,4 @@ const mapDispatchToProps = {
     clearError
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EmailPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(EmailPanel)

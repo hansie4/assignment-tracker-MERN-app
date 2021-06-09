@@ -93,4 +93,4 @@ const mapDispatchToProps = {
     clearError
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PasswordPanel);
+export default connect(mapStateToProps, mapDispatchToProps)(PasswordPanel)

@@ -112,4 +112,4 @@ const mapDispatchToProps = {
     clearError
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RecoveryPasswordPage);
+export default connect(mapStateToProps, mapDispatchToProps)(RecoveryPasswordPage)

@@ -90,4 +90,4 @@ const mapDispatchToProps = {
     clearError
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UsernamePanel);
+export default connect(mapStateToProps, mapDispatchToProps)(UsernamePanel)

@@ -47,4 +47,4 @@ const mapDispatchToProps = {
     clearError
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DeletePanel);
+export default connect(mapStateToProps, mapDispatchToProps)(DeletePanel)

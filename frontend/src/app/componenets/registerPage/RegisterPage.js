@@ -157,4 +157,4 @@ const mapDispatchToProps = {
     clearError,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterPage)
