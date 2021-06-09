@@ -41,7 +41,7 @@ function App({
 			autoHideDuration={200}
 			style={{ width: '100%', height: '100vh' }}
 		>
-			<Container fluid className='min-vh-100 h-100 p-0 bg-dark bg-gradient' style={{ height: '1px' }}>
+			<Container fluid className='bg-secondary' style={{ padding: '0', WebkitBackgroundSize: 'cover', backgroundSize: 'cover' }}>
 				{
 					isAuthLoading ?
 						<Container className='pt-5'>
