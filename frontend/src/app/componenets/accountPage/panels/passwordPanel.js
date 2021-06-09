@@ -13,7 +13,6 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
-import Alert from 'react-bootstrap/Alert'
 
 import { Save } from 'react-bootstrap-icons'
 import { Eye } from 'react-bootstrap-icons'
@@ -34,7 +33,7 @@ function PasswordPanel(props) {
                 <InputGroup.Prepend>
                     <InputGroup.Text>New Password:</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl type={passwordShown ? "text" : "password"} onChange={(event) => handleChange(event, setPassword, props.clearError)} disabled={props.isLoading} />
+                <FormControl type={passwordShown ? "text" : "password"} onChange={(event) => handleChange(event, setPassword)} disabled={props.isLoading} />
                 <InputGroup.Append>
                     <Button variant="secondary" onClick={() => setShown(!passwordShown)}>{passwordShown ? <EyeSlash /> : <Eye />}</Button>
                 </InputGroup.Append>
@@ -43,17 +42,11 @@ function PasswordPanel(props) {
                 <InputGroup.Prepend>
                     <InputGroup.Text>Confirm New Password:</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl type={passwordConfirmShown ? "text" : "password"} onChange={(event) => handleChange(event, setPasswordConfirm, props.clearError)} disabled={props.isLoading} />
+                <FormControl type={passwordConfirmShown ? "text" : "password"} onChange={(event) => handleChange(event, setPasswordConfirm)} disabled={props.isLoading} />
                 <InputGroup.Append>
                     <Button variant="secondary" onClick={() => setConfirmShown(!passwordConfirmShown)}>{passwordConfirmShown ? <EyeSlash /> : <Eye />}</Button>
                 </InputGroup.Append>
             </InputGroup>
-            {
-                props.error ?
-                    <Alert variant="warning">{props.error.message}</Alert>
-                    :
-                    null
-            }
             <div className="d-flex justify-content-center">
                 {
                     props.isLoading ?
@@ -86,14 +79,12 @@ const newPasswordSubmit = (new_password, new_password_confirm, changePasswordMet
     }
 }
 
-const handleChange = (event, setMethod, clearErrorMethod) => {
-    clearErrorMethod()
+const handleChange = (event, setMethod) => {
     setMethod(event.target.value)
 }
 
 const mapStateToProps = state => ({
     isLoading: state.account.isLoading,
-    error: state.error.error
 })
 
 const mapDispatchToProps = {

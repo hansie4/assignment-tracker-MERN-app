@@ -13,7 +13,6 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
-import Alert from 'react-bootstrap/Alert'
 
 import { Save } from 'react-bootstrap-icons'
 
@@ -36,20 +35,14 @@ function EmailPanel(props) {
                 <InputGroup.Prepend>
                     <InputGroup.Text>New Email Address:</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl onChange={(event) => handleChange(event, setNewEmail, props.clearError)} disabled={props.isLoading} />
+                <FormControl onChange={(event) => handleChange(event, setNewEmail)} disabled={props.isLoading} />
             </InputGroup>
             <InputGroup className="mb-3">
                 <InputGroup.Prepend>
                     <InputGroup.Text>Confirm New Email Address:</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl onChange={(event) => handleChange(event, setNewEmailConfirm, props.clearError)} disabled={props.isLoading} />
+                <FormControl onChange={(event) => handleChange(event, setNewEmailConfirm)} disabled={props.isLoading} />
             </InputGroup>
-            {
-                props.error ?
-                    <Alert variant="warning">{props.error.message}</Alert>
-                    :
-                    null
-            }
             <div className="d-flex justify-content-center">
                 {
                     props.isLoading ?
@@ -82,15 +75,13 @@ const newEmailSubmit = (new_email_address, new_email_address_confirm, changeEmai
     }
 }
 
-const handleChange = (event, setMethod, clearErrorMethod) => {
-    clearErrorMethod()
+const handleChange = (event, setMethod) => {
     setMethod(event.target.value)
 }
 
 const mapStateToProps = state => ({
     email_address: state.account.email_address,
-    isLoading: state.account.isLoading,
-    error: state.error.error
+    isLoading: state.account.isLoading
 })
 
 const mapDispatchToProps = {

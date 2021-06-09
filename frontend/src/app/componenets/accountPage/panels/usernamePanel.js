@@ -13,7 +13,6 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
-import Alert from 'react-bootstrap/Alert'
 
 import { Save } from 'react-bootstrap-icons'
 
@@ -36,20 +35,14 @@ function UsernamePanel(props) {
                 <InputGroup.Prepend>
                     <InputGroup.Text>New Username:</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl onChange={(event) => handleChange(event, setUsername, props.clearError)} disabled={props.isLoading} />
+                <FormControl onChange={(event) => handleChange(event, setUsername)} disabled={props.isLoading} />
             </InputGroup>
             <InputGroup className="mb-3">
                 <InputGroup.Prepend>
                     <InputGroup.Text>Confirm New Username:</InputGroup.Text>
                 </InputGroup.Prepend>
-                <FormControl onChange={(event) => handleChange(event, setUsernameConfirm, props.clearError)} disabled={props.isLoading} />
+                <FormControl onChange={(event) => handleChange(event, setUsernameConfirm)} disabled={props.isLoading} />
             </InputGroup>
-            {
-                props.error ?
-                    <Alert variant="warning">{props.error.message}</Alert>
-                    :
-                    null
-            }
             <div className="d-flex justify-content-center">
                 {
                     props.isLoading ?
@@ -82,15 +75,13 @@ const newUsernameSubmit = (new_username, new_username_confirm, changeUsernameMet
     }
 }
 
-const handleChange = (event, setMethod, clearErrorMethod) => {
-    clearErrorMethod()
+const handleChange = (event, setMethod) => {
     setMethod(event.target.value)
 }
 
 const mapStateToProps = state => ({
     username: state.account.username,
     isLoading: state.account.isLoading,
-    error: state.error.error
 })
 
 const mapDispatchToProps = {

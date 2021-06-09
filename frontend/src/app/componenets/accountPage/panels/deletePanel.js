@@ -2,14 +2,10 @@ import { connect } from 'react-redux'
 
 import { deleteAccount } from '../../../actions/accountActions'
 
-import {
-    setError,
-    clearError
-} from '../../../actions/errorActions'
+import { clearError } from '../../../actions/errorActions'
 
 import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
-import Alert from 'react-bootstrap/Alert'
 
 import { Trash } from 'react-bootstrap-icons'
 
@@ -20,12 +16,6 @@ function DeletePanel(props) {
             <hr />
             <h3>This will permenantly delete your account and all of your tracker info.</h3>
             <br />
-            {
-                props.error ?
-                    <Alert variant="warning">{props.error.message}</Alert>
-                    :
-                    null
-            }
             <div className="d-flex justify-content-center">
                 {
                     props.isLoading ?
@@ -49,13 +39,11 @@ const deleteSubmit = (deleteMethod, clearErrorMethod) => {
 }
 
 const mapStateToProps = state => ({
-    isLoading: state.account.isLoading,
-    error: state.error.error
+    isLoading: state.account.isLoading
 })
 
 const mapDispatchToProps = {
     deleteAccount,
-    setError,
     clearError
 }
 
