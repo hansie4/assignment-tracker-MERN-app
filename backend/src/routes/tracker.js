@@ -52,7 +52,7 @@ router.post('/semester', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(201)
+                    return res.status(201).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -65,7 +65,7 @@ router.post('/semester', auth, async (req, res) => {
 // @desc    Deletes a semester
 // @access  Private
 router.delete('/semester', auth, async (req, res) => {
-    const { semester_id } = req.body
+    const semester_id = req.get('semester_id')
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -85,7 +85,7 @@ router.delete('/semester', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(200)
+                    return res.status(200).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -98,7 +98,8 @@ router.delete('/semester', auth, async (req, res) => {
 // @desc    Modifys a semester's info
 // @access  Private
 router.put('/semester', auth, async (req, res) => {
-    const { semester_id, new_name, new_start_date, new_end_date } = req.body
+    const semester_id = req.get('semester_id')
+    const { new_name, new_start_date, new_end_date } = req.body
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -122,7 +123,7 @@ router.put('/semester', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(200)
+                    return res.status(200).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -137,7 +138,8 @@ router.put('/semester', auth, async (req, res) => {
 // @desc    Adds a new class
 // @access  Private
 router.post('/class', auth, async (req, res) => {
-    const { semester_id, name, description } = req.body
+    const semester_id = req.get('semester_id')
+    const { name, description } = req.body
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -164,7 +166,7 @@ router.post('/class', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(201)
+                    return res.status(201).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -177,7 +179,8 @@ router.post('/class', auth, async (req, res) => {
 // @desc    Deletes a class
 // @access  Private
 router.delete('/class', auth, async (req, res) => {
-    const { semester_id, class_id } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -201,7 +204,7 @@ router.delete('/class', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(200)
+                    return res.status(200).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -214,12 +217,14 @@ router.delete('/class', auth, async (req, res) => {
 // @desc    Modifys a class's info
 // @access  Private
 router.put('/class', auth, async (req, res) => {
-    const { semester_id, class_id, new_name, new_description } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
+    const { new_name, new_description } = req.body
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
     if (!class_id) return res.status(400).json({ msg: 'Class id is required' })
-    if (!new_name && !new_start_date && !new_end_date) return res.status(400).json({ msg: 'New value to update is required' })
+    if (!new_name && !new_description) return res.status(400).json({ msg: 'New value to update is required' })
 
     await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
@@ -240,7 +245,7 @@ router.put('/class', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(200)
+                    return res.status(200).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -255,7 +260,9 @@ router.put('/class', auth, async (req, res) => {
 // @desc    Adds a new instructor
 // @access  Private
 router.post('/instructor', auth, async (req, res) => {
-    const { semester_id, class_id, name, email_address, office_hours_info } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
+    const { name, email_address, office_hours_info } = req.body
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -287,7 +294,7 @@ router.post('/instructor', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(201)
+                    return res.status(201).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -300,7 +307,9 @@ router.post('/instructor', auth, async (req, res) => {
 // @desc    Deletes an instructor
 // @access  Private
 router.delete('/instructor', auth, async (req, res) => {
-    const { semester_id, class_id, instructor_id } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
+    const instructor_id = req.get('instructor_id')
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -328,7 +337,7 @@ router.delete('/instructor', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(200)
+                    return res.status(200).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -341,7 +350,10 @@ router.delete('/instructor', auth, async (req, res) => {
 // @desc    Modifys a instructor's info
 // @access  Private
 router.put('/instructor', auth, async (req, res) => {
-    const { semester_id, class_id, instructor_id, new_name, new_email_address, new_office_hours_info } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
+    const instructor_id = req.get('instructor_id')
+    const { new_name, new_email_address, new_office_hours_info } = req.body
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -372,7 +384,7 @@ router.put('/instructor', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(200)
+                    return res.status(200).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -387,7 +399,9 @@ router.put('/instructor', auth, async (req, res) => {
 // @desc    Adds a new assignment_type
 // @access  Private
 router.post('/assignment_type', auth, async (req, res) => {
-    const { semester_id, class_id, name, weight } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
+    const { name, weight } = req.body
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -419,7 +433,7 @@ router.post('/assignment_type', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(201)
+                    return res.status(201).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -432,7 +446,9 @@ router.post('/assignment_type', auth, async (req, res) => {
 // @desc    Deletes an assignment_type
 // @access  Private
 router.delete('/assignment_type', auth, async (req, res) => {
-    const { semester_id, class_id, assignment_type_id } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
+    const assignment_type_id = req.get('assignment_type_id')
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -460,7 +476,7 @@ router.delete('/assignment_type', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(200)
+                    return res.status(200).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -473,7 +489,10 @@ router.delete('/assignment_type', auth, async (req, res) => {
 // @desc    Modifys a assignment_type's info
 // @access  Private
 router.put('/assignment_type', auth, async (req, res) => {
-    const { semester_id, class_id, assignment_type_id, new_name, new_weight } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
+    const assignment_type_id = req.get('assignment_type_id')
+    const { new_name, new_weight } = req.body
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -503,7 +522,7 @@ router.put('/assignment_type', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(200)
+                    return res.status(200).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -518,7 +537,9 @@ router.put('/assignment_type', auth, async (req, res) => {
 // @desc    Adds a new assignment
 // @access  Private
 router.post('/assignment', auth, async (req, res) => {
-    const { semester_id, class_id, name, notes, due_date, assignment_type_id, turned_in, grade } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
+    const { name, notes, due_date, assignment_type_id, turned_in, grade } = req.body
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -553,7 +574,7 @@ router.post('/assignment', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(201)
+                    return res.status(201).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -566,7 +587,9 @@ router.post('/assignment', auth, async (req, res) => {
 // @desc    Deletes an assignment
 // @access  Private
 router.delete('/assignment', auth, async (req, res) => {
-    const { semester_id, class_id, assignment_id } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
+    const assignment_id = req.get('assignment_id')
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -595,7 +618,7 @@ router.delete('/assignment', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(200)
+                    return res.status(200).json({ semesters: doc.semesters })
                 }
             })
         } else {
@@ -608,7 +631,10 @@ router.delete('/assignment', auth, async (req, res) => {
 // @desc    Modifys a assignment's info
 // @access  Private
 router.put('/assignment', auth, async (req, res) => {
-    const { semester_id, class_id, assignment_id, new_name, new_notes, new_due_date, new_assignment_type_id, new_turned_in, new_grade } = req.body
+    const semester_id = req.get('semester_id')
+    const class_id = req.get('class_id')
+    const assignment_id = req.get('assignment_id')
+    const { new_name, new_notes, new_due_date, new_assignment_type_id, new_turned_in, new_grade } = req.body
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -642,7 +668,7 @@ router.put('/assignment', auth, async (req, res) => {
                 if (err) {
                     return res.status(400).json({ msg: err.message })
                 } else {
-                    return res.sendStatus(200)
+                    return res.status(200).json({ semesters: doc.semesters })
                 }
             })
         } else {
