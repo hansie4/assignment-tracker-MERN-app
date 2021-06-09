@@ -27,7 +27,7 @@ import {
 export const getAccountInfo = () => async (dispatch, getState) => {
     dispatch({ type: ACCOUNT_LOADING })
 
-    const url = '/account/'
+    const url = '/account'
     const config = authTokenConfig(getState)
 
     await axios.get(url, config)
