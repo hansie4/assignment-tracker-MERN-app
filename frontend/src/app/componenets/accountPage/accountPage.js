@@ -73,7 +73,26 @@ function AccountPage({
                         <div className="w-100 h-100 p-2">
                             <Tab.Container defaultActiveKey="info" transition={false}>
                                 <Row className="h-100">
-                                    <Col sm={2} className="border-end" >
+                                    <Col sm={10}>
+                                        <Tab.Content>
+                                            <Tab.Pane eventKey="info">
+                                                <InfoPanel />
+                                            </Tab.Pane>
+                                            <Tab.Pane eventKey="email">
+                                                <EmailPanel />
+                                            </Tab.Pane>
+                                            <Tab.Pane eventKey="username">
+                                                <UsernamePanel />
+                                            </Tab.Pane>
+                                            <Tab.Pane eventKey="password">
+                                                <PasswordPanel />
+                                            </Tab.Pane>
+                                            <Tab.Pane eventKey="delete">
+                                                <DeletePanel />
+                                            </Tab.Pane>
+                                        </Tab.Content>
+                                    </Col>
+                                    <Col sm={2} className="border-start" >
                                         <Nav variant="pills" className="flex-column">
                                             <Nav.Item>
                                                 <Nav.Link eventKey="info" disabled={isLoading}>Account Info</Nav.Link>
@@ -101,25 +120,6 @@ function AccountPage({
                                             </Nav.Item>
                                             <hr />
                                         </Nav>
-                                    </Col>
-                                    <Col sm={10}>
-                                        <Tab.Content>
-                                            <Tab.Pane eventKey="info">
-                                                <InfoPanel />
-                                            </Tab.Pane>
-                                            <Tab.Pane eventKey="email">
-                                                <EmailPanel />
-                                            </Tab.Pane>
-                                            <Tab.Pane eventKey="username">
-                                                <UsernamePanel />
-                                            </Tab.Pane>
-                                            <Tab.Pane eventKey="password">
-                                                <PasswordPanel />
-                                            </Tab.Pane>
-                                            <Tab.Pane eventKey="delete">
-                                                <DeletePanel />
-                                            </Tab.Pane>
-                                        </Tab.Content>
                                     </Col>
                                 </Row>
                             </Tab.Container>
