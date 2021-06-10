@@ -43,7 +43,7 @@ function RecoveryPasswordPage(props) {
                                         className='mb-2'
                                         type={showPassword ? 'text' : 'password'}
                                         placeholder='Enter your password here'
-                                        onChange={(event) => handleChange(event, setNewPassword, props.clearError)}
+                                        onChange={(event) => handleChange(event, setNewPassword, props.error, props.clearError)}
                                         disabled={props.isLoading}
                                     />
                                 </Form.Group>
@@ -54,7 +54,7 @@ function RecoveryPasswordPage(props) {
                                         className='mb-2'
                                         type={showPassword ? 'text' : 'password'}
                                         placeholder='Confirm your password here'
-                                        onChange={(event) => handleChange(event, setNewPasswordConfirm, props.clearError)}
+                                        onChange={(event) => handleChange(event, setNewPasswordConfirm, props.error, props.clearError)}
                                         disabled={props.isLoading}
                                     />
                                     <Form.Check type='checkbox' label='Show password' onChange={(event) => setShowPassword(event.target.checked)} />
@@ -97,8 +97,8 @@ const submit = (event, new_password, new_password_confirm, accessToken, updatePa
     }
 }
 
-const handleChange = (event, setMethod, clearErrorMethod) => {
-    clearErrorMethod()
+const handleChange = (event, setMethod, error, clearErrorMethod) => {
+    if (error) clearErrorMethod()
     setMethod(event.target.value)
 }
 

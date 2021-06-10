@@ -40,7 +40,7 @@ function RegisterPage(props) {
                                     <Form.Control
                                         type='text'
                                         placeholder='Enter email address here'
-                                        onChange={(event) => handleChange(event, setEmail, props.clearError)}
+                                        onChange={(event) => handleChange(event, setEmail, props.error, props.clearError)}
                                         disabled={props.isLoading}
                                     />
                                 </Form.Group>
@@ -50,7 +50,7 @@ function RegisterPage(props) {
                                     <Form.Control
                                         type='text'
                                         placeholder='Confirm email address here'
-                                        onChange={(event) => handleChange(event, setEmailConfirm, props.clearError)}
+                                        onChange={(event) => handleChange(event, setEmailConfirm, props.error, props.clearError)}
                                         disabled={props.isLoading}
                                     />
                                 </Form.Group>
@@ -60,7 +60,7 @@ function RegisterPage(props) {
                                     <Form.Control
                                         type='text'
                                         placeholder='Enter username here'
-                                        onChange={(event) => handleChange(event, setUsername, props.clearError)}
+                                        onChange={(event) => handleChange(event, setUsername, props.error, props.clearError)}
                                         disabled={props.isLoading}
                                     />
                                 </Form.Group>
@@ -71,7 +71,7 @@ function RegisterPage(props) {
                                         className='mb-2'
                                         type={showPassword ? 'text' : 'password'}
                                         placeholder='Enter your password here'
-                                        onChange={(event) => handleChange(event, setPassword, props.clearError)}
+                                        onChange={(event) => handleChange(event, setPassword, props.error, props.clearError)}
                                         disabled={props.isLoading}
                                     />
                                 </Form.Group>
@@ -82,7 +82,7 @@ function RegisterPage(props) {
                                         className='mb-2'
                                         type={showPassword ? 'text' : 'password'}
                                         placeholder='Confirm your password here'
-                                        onChange={(event) => handleChange(event, setPasswordConfirm, props.clearError)}
+                                        onChange={(event) => handleChange(event, setPasswordConfirm, props.error, props.clearError)}
                                         disabled={props.isLoading}
                                     />
                                     <Form.Check type='checkbox' label='Show password' onChange={(event) => setShowPassword(event.target.checked)} />
@@ -141,8 +141,8 @@ const register = (email_address, email_address_confirm, username, password, pass
     }
 }
 
-const handleChange = (event, setMethod, clearErrorMethod) => {
-    clearErrorMethod()
+const handleChange = (event, setMethod, error, clearErrorMethod) => {
+    if (error) clearErrorMethod()
     setMethod(event.target.value)
 }
 

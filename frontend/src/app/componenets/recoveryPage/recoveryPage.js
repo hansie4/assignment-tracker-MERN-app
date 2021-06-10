@@ -37,7 +37,7 @@ function RecoveryPage(props) {
                                     <Form.Control
                                         type='text'
                                         placeholder='Enter email address here'
-                                        onChange={(event) => handleChange(event, setEmail, props.clearError)}
+                                        onChange={(event) => handleChange(event, setEmail, props.error, props.clearError)}
                                         disabled={props.isLoading || emailSent}
                                     />
                                 </Form.Group>
@@ -81,8 +81,8 @@ const submit = (event, email_address, recoverAccountMethod, setEmailSent, setErr
     }
 }
 
-const handleChange = (event, setMethod, clearErrorMethod) => {
-    clearErrorMethod()
+const handleChange = (event, setMethod, error, clearErrorMethod) => {
+    if (error) clearErrorMethod()
     setMethod(event.target.value)
 }
 
