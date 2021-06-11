@@ -4,7 +4,6 @@ import {
     TRACKER_LOADING,
     TRACKER_DONE_LOADING,
     TRACKER_SUCCESS,
-    TRACKER_UPDATE_SUCCESS,
     TRACKER_SEMESTER_SELECTED,
     SERVER_ERROR,
     CLIENT_ERROR
@@ -64,6 +63,13 @@ export const addSemester = ({ name, start_date, end_date }) => async (dispatch, 
         return dispatch({ type: TRACKER_DONE_LOADING })
     }
 
+    if (start_date && end_date) {
+        if (start_date > end_date) {
+            dispatch(setError(400, 'Semester start date must be before end date'))
+            return dispatch({ type: TRACKER_DONE_LOADING })
+        }
+    }
+
     const url = '/tracker/semester'
     const body = {
         name,
@@ -119,7 +125,7 @@ export const deleteSemester = ({ semester_id }) => async (dispatch, getState) =>
         .then((response) => {
             dispatch(clearError())
             dispatch({
-                type: TRACKER_UPDATE_SUCCESS,
+                type: TRACKER_SUCCESS,
                 payload: {
                     semesters: response.data.semesters
                 }
@@ -151,9 +157,16 @@ export const modifySemester = ({ semester_id, new_name, new_start_date, new_end_
     if (!semester_id) {
         dispatch(setError(400, 'Semester id is required'))
         return dispatch({ type: TRACKER_DONE_LOADING })
-    } else if (!new_name || !new_start_date || !new_end_date) {
+    } else if (!new_name && !new_start_date && !new_end_date) {
         dispatch(setError(400, 'Values to update are required'))
         return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+
+    if (new_start_date && new_end_date) {
+        if (new_start_date > new_end_date) {
+            dispatch(setError(400, 'Semester start date must be before end date'))
+            return dispatch({ type: TRACKER_DONE_LOADING })
+        }
     }
 
     const url = '/tracker/semester'
@@ -170,11 +183,12 @@ export const modifySemester = ({ semester_id, new_name, new_start_date, new_end_
         .then((response) => {
             dispatch(clearError())
             dispatch({
-                type: TRACKER_UPDATE_SUCCESS,
+                type: TRACKER_SUCCESS,
                 payload: {
                     semesters: response.data.semesters
                 }
             })
+            dispatch(selectSemester())
         })
         .catch(async (error) => {
             if (error.response) {
@@ -218,7 +232,7 @@ export const selectSemester = (semester_id) => (dispatch, getState) => {
                 })
             }
         } else {
-            // If there is already a semester selected
+            // If there is already a semester selected and a semester id was not passed in
             if (selected_semester_id) {
                 const semester = semesters.find(value => value._id === selected_semester_id)
                 if (semester) {
@@ -258,7 +272,7 @@ export const selectSemester = (semester_id) => (dispatch, getState) => {
 export const getSelectedSemesterInfo = () => (dispatch, getState) => {
     const selected_semester_id = getState().tracker.selected_semester_id
 
-    if (!selected_semester_id) return dispatch(selectSemester())
+    if (!selected_semester_id) dispatch(selectSemester())
 
     return getState().tracker.semesters.find(semester => semester._id === selected_semester_id)
 }

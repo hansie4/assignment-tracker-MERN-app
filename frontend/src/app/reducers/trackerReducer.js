@@ -2,7 +2,6 @@ import {
     TRACKER_LOADING,
     TRACKER_DONE_LOADING,
     TRACKER_SUCCESS,
-    TRACKER_UPDATE_SUCCESS,
     TRACKER_SEMESTER_SELECTED,
     SERVER_ERROR,
     CLIENT_ERROR
@@ -37,7 +36,6 @@ function trackerReducerFunction(state = initialState, action) {
                 ...state,
                 selected_semester_id: action.payload.selected_semester_id
             }
-        case TRACKER_UPDATE_SUCCESS:
         case SERVER_ERROR:
         case CLIENT_ERROR:
         default:
