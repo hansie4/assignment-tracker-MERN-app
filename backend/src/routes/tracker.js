@@ -99,7 +99,7 @@ router.delete('/semester', auth, async (req, res) => {
 // @access  Private
 router.put('/semester', auth, async (req, res) => {
     const semester_id = req.get('semester_id')
-    const { new_name, new_start_date, new_end_date } = req.body
+    const { new_name, new_start_date, new_end_date, deleteDates } = req.body
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
@@ -117,6 +117,7 @@ router.put('/semester', auth, async (req, res) => {
             if (new_name) doc.semesters.id(semester_id).set({ name: new_name })
             if (new_start_date) doc.semesters.id(semester_id).set({ start_date: new_start_date })
             if (new_end_date) doc.semesters.id(semester_id).set({ end_date: new_end_date })
+            if (deleteDates) doc.semesters.id(semester_id).set({ start_date: null, end_date: null })
 
             // Saving the changes
             doc.save((err) => {
