@@ -18,8 +18,16 @@ import {
 export const loginUser = ({ username, password }) => async (dispatch, getState) => {
     dispatch({ type: AUTH_LOADING })
 
-    if (!username) dispatch({ type: AUTH_FAILURE })
-    if (!password) dispatch({ type: AUTH_FAILURE })
+    if (!username || username === '') {
+        dispatch(setError(400, 'Username is required'))
+        dispatch({ type: AUTH_FAILURE })
+        return dispatch({ type: AUTH_DONE_LOADING })
+    }
+    if (!password || password === '') {
+        dispatch(setError(400, 'Password is required'))
+        dispatch({ type: AUTH_FAILURE })
+        return dispatch({ type: AUTH_DONE_LOADING })
+    }
 
     const url = '/auth/login'
     const body = {
@@ -61,9 +69,21 @@ export const loginUser = ({ username, password }) => async (dispatch, getState) 
 export const registerUser = ({ email_address, username, password }) => async (dispatch, getState) => {
     dispatch({ type: AUTH_LOADING })
 
-    if (!email_address) return dispatch({ type: AUTH_FAILURE })
-    if (!username) return dispatch({ type: AUTH_FAILURE })
-    if (!password) return dispatch({ type: AUTH_FAILURE })
+    if (!email_address || email_address === '') {
+        dispatch(setError(400, 'Email address is required'))
+        dispatch({ type: AUTH_FAILURE })
+        return dispatch({ type: AUTH_DONE_LOADING })
+    }
+    if (!username || username === '') {
+        dispatch(setError(400, 'Username is required'))
+        dispatch({ type: AUTH_FAILURE })
+        return dispatch({ type: AUTH_DONE_LOADING })
+    }
+    if (!password || password === '') {
+        dispatch(setError(400, 'Password is required'))
+        dispatch({ type: AUTH_FAILURE })
+        return dispatch({ type: AUTH_DONE_LOADING })
+    }
 
     const url = '/auth/register'
     const body = {
