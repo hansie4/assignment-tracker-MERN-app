@@ -5,6 +5,7 @@ import {
     TRACKER_DONE_LOADING,
     TRACKER_SUCCESS,
     TRACKER_SEMESTER_SELECTED,
+    TRACKER_CLASS_SELECTED,
     SERVER_ERROR,
     CLIENT_ERROR
 } from './actionTypes'
@@ -55,6 +56,7 @@ export const getTrackerInfo = () => async (dispatch, getState) => {
     dispatch({ type: TRACKER_DONE_LOADING })
 }
 
+
 export const addSemester = ({ name, start_date, end_date }) => async (dispatch, getState) => {
     dispatch({ type: TRACKER_LOADING })
 
@@ -92,7 +94,7 @@ export const addSemester = ({ name, start_date, end_date }) => async (dispatch, 
         .catch(async (error) => {
             if (error.response) {
                 if (error.response.status === 401) {
-                    await dispatch(handle401Error(addSemester, body, []))
+                    await dispatch(handle401Error(addSemester, { name, start_date, end_date }, []))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
@@ -135,7 +137,7 @@ export const deleteSemester = ({ semester_id }) => async (dispatch, getState) =>
         .catch(async (error) => {
             if (error.response) {
                 if (error.response.status === 401) {
-                    await dispatch(handle401Error(addSemester, { semester_id }, []))
+                    await dispatch(handle401Error(deleteSemester, { semester_id }, []))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
@@ -193,7 +195,7 @@ export const modifySemester = ({ semester_id, new_name, new_start_date, new_end_
         .catch(async (error) => {
             if (error.response) {
                 if (error.response.status === 401) {
-                    await dispatch(handle401Error(addSemester, { semester_id, new_name, new_start_date, new_end_date }, []))
+                    await dispatch(handle401Error(modifySemester, { semester_id, new_name, new_start_date, new_end_date }, []))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
@@ -209,6 +211,334 @@ export const modifySemester = ({ semester_id, new_name, new_start_date, new_end_
     dispatch({ type: TRACKER_DONE_LOADING })
 }
 
+
+export const addClass = ({ semester_id, name, description }) => async (dispatch, getState) => {
+    dispatch({ type: TRACKER_LOADING })
+
+    if (!semester_id) {
+        dispatch(setError(400, 'Semester id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!name) {
+        dispatch(setError(400, 'Semester name is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+
+    const url = '/tracker/class'
+    const body = {
+        name,
+        description
+    }
+    let config = authTokenConfig(getState)
+
+    config.headers['semester_id'] = semester_id
+
+    await axios.post(url, body, config)
+        .then((response) => {
+            dispatch(clearError())
+            dispatch({
+                type: TRACKER_SUCCESS,
+                payload: {
+                    semesters: response.data.semesters
+                }
+            })
+            const classes = getState().tracker.semesters.find(value => value._id === semester_id).classes
+            const class_id = classes[(classes.length - 1)]._id
+            dispatch(selectClass(class_id))
+        })
+        .catch(async (error) => {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    await dispatch(handle401Error(addClass, { semester_id, name, description }, []))
+                } else {
+                    dispatch(setError(error.response.status, error.response.data.msg))
+                }
+            } else if (error.request) {
+                dispatch(setError(500, 'No response from server'))
+                dispatch({ type: SERVER_ERROR })
+            } else {
+                dispatch(setError(0, 'Error creating request'))
+                dispatch({ type: CLIENT_ERROR })
+            }
+        })
+
+    dispatch({ type: TRACKER_DONE_LOADING })
+}
+
+export const deleteClass = ({ class_id, semester_id }) => async (dispatch, getState) => {
+    dispatch({ type: TRACKER_LOADING })
+
+    if (!class_id) {
+        dispatch(setError(400, 'Class id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!semester_id) {
+        dispatch(setError(400, 'Semester id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+
+    const url = '/tracker/class'
+    let config = authTokenConfig(getState)
+
+    config.headers['class_id'] = class_id
+    config.headers['semester_id'] = semester_id
+
+    await axios.delete(url, config)
+        .then((response) => {
+            dispatch(clearError())
+            dispatch({
+                type: TRACKER_SUCCESS,
+                payload: {
+                    semesters: response.data.semesters
+                }
+            })
+            dispatch(selectClass())
+        })
+        .catch(async (error) => {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    await dispatch(handle401Error(deleteClass, { class_id, semester_id }, []))
+                } else {
+                    dispatch(setError(error.response.status, error.response.data.msg))
+                }
+            } else if (error.request) {
+                dispatch(setError(500, 'No response from server'))
+                dispatch({ type: SERVER_ERROR })
+            } else {
+                dispatch(setError(0, 'Error creating request'))
+                dispatch({ type: CLIENT_ERROR })
+            }
+        })
+
+    dispatch({ type: TRACKER_DONE_LOADING })
+}
+
+export const modifyClass = ({ class_id, semester_id, new_name, new_description }) => async (dispatch, getState) => {
+    dispatch({ type: TRACKER_LOADING })
+
+    if (!class_id) {
+        dispatch(setError(400, 'Class id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!semester_id) {
+        dispatch(setError(400, 'Semester id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!new_name && !new_description) {
+        dispatch(setError(400, 'Values to update are required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+
+    const url = '/tracker/class'
+    const body = {
+        new_name,
+        new_description
+    }
+    let config = authTokenConfig(getState)
+
+    config.headers['class_id'] = class_id
+    config.headers['semester_id'] = semester_id
+
+    await axios.put(url, body, config)
+        .then((response) => {
+            dispatch(clearError())
+            dispatch({
+                type: TRACKER_SUCCESS,
+                payload: {
+                    semesters: response.data.semesters
+                }
+            })
+        })
+        .catch(async (error) => {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    await dispatch(handle401Error(modifyClass, { class_id, semester_id, new_name, new_description }, []))
+                } else {
+                    dispatch(setError(error.response.status, error.response.data.msg))
+                }
+            } else if (error.request) {
+                dispatch(setError(500, 'No response from server'))
+                dispatch({ type: SERVER_ERROR })
+            } else {
+                dispatch(setError(0, 'Error creating request'))
+                dispatch({ type: CLIENT_ERROR })
+            }
+        })
+
+    dispatch({ type: TRACKER_DONE_LOADING })
+}
+
+
+export const addInstructor = ({ class_id, semester_id, name, email_address, office_hours_info }) => async (dispatch, getState) => {
+    dispatch({ type: TRACKER_LOADING })
+
+    if (!class_id) {
+        dispatch(setError(400, 'Class id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!semester_id) {
+        dispatch(setError(400, 'Semester id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!name) {
+        dispatch(setError(400, 'Semester name is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+
+    const url = '/tracker/instructor'
+    const body = {
+        name,
+        email_address,
+        office_hours_info
+    }
+    let config = authTokenConfig(getState)
+
+    config.headers['class_id'] = class_id
+    config.headers['semester_id'] = semester_id
+
+    await axios.post(url, body, config)
+        .then((response) => {
+            dispatch(clearError())
+            dispatch({
+                type: TRACKER_SUCCESS,
+                payload: {
+                    semesters: response.data.semesters
+                }
+            })
+        })
+        .catch(async (error) => {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    await dispatch(handle401Error(addInstructor, { class_id, semester_id, name, email_address, office_hours_info }, []))
+                } else {
+                    dispatch(setError(error.response.status, error.response.data.msg))
+                }
+            } else if (error.request) {
+                dispatch(setError(500, 'No response from server'))
+                dispatch({ type: SERVER_ERROR })
+            } else {
+                dispatch(setError(0, 'Error creating request'))
+                dispatch({ type: CLIENT_ERROR })
+            }
+        })
+
+    dispatch({ type: TRACKER_DONE_LOADING })
+}
+
+export const deleteInstructor = ({ instructor_id, class_id, semester_id }) => async (dispatch, getState) => {
+    dispatch({ type: TRACKER_LOADING })
+
+    if (!instructor_id) {
+        dispatch(setError(400, 'Instructor id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!class_id) {
+        dispatch(setError(400, 'Class id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!semester_id) {
+        dispatch(setError(400, 'Semester id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+
+    const url = '/tracker/instructor'
+    let config = authTokenConfig(getState)
+
+    config.headers['instructor_id'] = instructor_id
+    config.headers['class_id'] = class_id
+    config.headers['semester_id'] = semester_id
+
+    await axios.delete(url, config)
+        .then((response) => {
+            dispatch(clearError())
+            dispatch({
+                type: TRACKER_SUCCESS,
+                payload: {
+                    semesters: response.data.semesters
+                }
+            })
+        })
+        .catch(async (error) => {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    await dispatch(handle401Error(deleteInstructor, { instructor_id, class_id, semester_id }, []))
+                } else {
+                    dispatch(setError(error.response.status, error.response.data.msg))
+                }
+            } else if (error.request) {
+                dispatch(setError(500, 'No response from server'))
+                dispatch({ type: SERVER_ERROR })
+            } else {
+                dispatch(setError(0, 'Error creating request'))
+                dispatch({ type: CLIENT_ERROR })
+            }
+        })
+
+    dispatch({ type: TRACKER_DONE_LOADING })
+}
+
+export const modifyInstructor = ({ instructor_id, class_id, semester_id, new_name, new_email_address, new_office_hours_info }) => async (dispatch, getState) => {
+    dispatch({ type: TRACKER_LOADING })
+
+    if (!instructor_id) {
+        dispatch(setError(400, 'Instructor id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!class_id) {
+        dispatch(setError(400, 'Class id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!semester_id) {
+        dispatch(setError(400, 'Semester id is required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+    if (!new_name && !new_email_address && !new_office_hours_info) {
+        dispatch(setError(400, 'Values to update are required'))
+        return dispatch({ type: TRACKER_DONE_LOADING })
+    }
+
+    const url = '/tracker/instructor'
+    const body = {
+        new_name,
+        new_email_address,
+        new_office_hours_info
+    }
+    let config = authTokenConfig(getState)
+
+    config.headers['instructor_id'] = instructor_id
+    config.headers['class_id'] = class_id
+    config.headers['semester_id'] = semester_id
+
+    await axios.put(url, body, config)
+        .then((response) => {
+            dispatch(clearError())
+            dispatch({
+                type: TRACKER_SUCCESS,
+                payload: {
+                    semesters: response.data.semesters
+                }
+            })
+        })
+        .catch(async (error) => {
+            if (error.response) {
+                if (error.response.status === 401) {
+                    await dispatch(handle401Error(modifyInstructor, { instructor_id, class_id, semester_id, new_name, new_email_address, new_office_hours_info }, []))
+                } else {
+                    dispatch(setError(error.response.status, error.response.data.msg))
+                }
+            } else if (error.request) {
+                dispatch(setError(500, 'No response from server'))
+                dispatch({ type: SERVER_ERROR })
+            } else {
+                dispatch(setError(0, 'Error creating request'))
+                dispatch({ type: CLIENT_ERROR })
+            }
+        })
+
+    dispatch({ type: TRACKER_DONE_LOADING })
+}
+
+
 export const selectSemester = (semester_id) => (dispatch, getState) => {
     const selected_semester_id = getState().tracker.selected_semester_id
     const semesters = getState().tracker.semesters
@@ -217,14 +547,14 @@ export const selectSemester = (semester_id) => (dispatch, getState) => {
         if (semester_id) {
             const semester = semesters.find(value => value._id === semester_id)
             if (semester) {
-                return dispatch({
+                dispatch({
                     type: TRACKER_SEMESTER_SELECTED,
                     payload: {
                         selected_semester_id: semester._id
                     }
                 })
             } else {
-                return dispatch({
+                dispatch({
                     type: TRACKER_SEMESTER_SELECTED,
                     payload: {
                         selected_semester_id: semesters[0]._id
@@ -236,14 +566,14 @@ export const selectSemester = (semester_id) => (dispatch, getState) => {
             if (selected_semester_id) {
                 const semester = semesters.find(value => value._id === selected_semester_id)
                 if (semester) {
-                    return dispatch({
+                    dispatch({
                         type: TRACKER_SEMESTER_SELECTED,
                         payload: {
                             selected_semester_id: selected_semester_id
                         }
                     })
                 } else {
-                    return dispatch({
+                    dispatch({
                         type: TRACKER_SEMESTER_SELECTED,
                         payload: {
                             selected_semester_id: semesters[0]._id
@@ -251,7 +581,7 @@ export const selectSemester = (semester_id) => (dispatch, getState) => {
                     })
                 }
             } else {
-                return dispatch({
+                dispatch({
                     type: TRACKER_SEMESTER_SELECTED,
                     payload: {
                         selected_semester_id: semesters[0]._id
@@ -260,10 +590,95 @@ export const selectSemester = (semester_id) => (dispatch, getState) => {
             }
         }
     } else {
-        return dispatch({
+        dispatch({
             type: TRACKER_SEMESTER_SELECTED,
             payload: {
                 selected_semester_id: null
+            }
+        })
+    }
+
+    return dispatch(selectClass())
+}
+
+export const selectClass = (class_id) => (dispatch, getState) => {
+    const selected_semester_id = getState().tracker.selected_semester_id
+    const selected_class_id = getState().tracker.selected_class_id
+
+    if (selected_semester_id) {
+
+        const semester = getState().tracker.semesters.find(value => value._id === selected_semester_id)
+
+        if (semester) {
+            if (semester.classes.length > 0) {
+                if (class_id) {
+                    const class_ = semester.classes.find(value => value._id === class_id)
+                    if (semester) {
+                        return dispatch({
+                            type: TRACKER_CLASS_SELECTED,
+                            payload: {
+                                selected_class_id: class_._id
+                            }
+                        })
+                    } else {
+                        return dispatch({
+                            type: TRACKER_CLASS_SELECTED,
+                            payload: {
+                                selected_class_id: semester.classes[0]._id
+                            }
+                        })
+                    }
+                } else {
+                    // If there is already a semester selected and a semester id was not passed in
+                    if (selected_class_id) {
+                        const class_ = semester.classes.find(value => value._id === selected_semester_id)
+                        if (class_) {
+                            return dispatch({
+                                type: TRACKER_CLASS_SELECTED,
+                                payload: {
+                                    selected_class_id: selected_semester_id
+                                }
+                            })
+                        } else {
+                            return dispatch({
+                                type: TRACKER_CLASS_SELECTED,
+                                payload: {
+                                    selected_class_id: semester.classes[0]._id
+                                }
+                            })
+                        }
+                    } else {
+                        return dispatch({
+                            type: TRACKER_CLASS_SELECTED,
+                            payload: {
+                                selected_class_id: semester.classes[0]._id
+                            }
+                        })
+                    }
+                }
+            } else {
+                return dispatch({
+                    type: TRACKER_CLASS_SELECTED,
+                    payload: {
+                        selected_class_id: null
+                    }
+                })
+            }
+        } else {
+            dispatch(selectSemester())
+            dispatch({
+                type: TRACKER_CLASS_SELECTED,
+                payload: {
+                    selected_class_id: null
+                }
+            })
+        }
+    } else {
+        dispatch(selectSemester())
+        dispatch({
+            type: TRACKER_CLASS_SELECTED,
+            payload: {
+                selected_class_id: null
             }
         })
     }
@@ -275,4 +690,20 @@ export const getSelectedSemesterInfo = () => (dispatch, getState) => {
     if (!selected_semester_id) dispatch(selectSemester())
 
     return getState().tracker.semesters.find(semester => semester._id === selected_semester_id)
+}
+
+export const getSelectedClassInfo = () => (dispatch, getState) => {
+    const selected_semester_id = getState().tracker.selected_semester_id
+    const selected_class_id = getState().tracker.selected_class_id
+
+    if (!selected_semester_id) dispatch(selectSemester())
+    if (!selected_class_id) dispatch(selectClass())
+
+    const semester = getState().tracker.semesters.find(semester => semester._id === selected_semester_id)
+
+    if (semester) {
+        return semester.classes.find(value => value._id === selected_class_id)
+    } else {
+        return null
+    }
 }
