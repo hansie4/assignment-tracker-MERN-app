@@ -70,7 +70,7 @@ function TrackerDisplay({
                                 ''
                         }
                         size='lg'
-                        variant='outline-dark'>
+                        variant='light'>
                         {semesters.map((semester, index) => {
                             return (
                                 <Dropdown.Item key={index} onClick={() => {
