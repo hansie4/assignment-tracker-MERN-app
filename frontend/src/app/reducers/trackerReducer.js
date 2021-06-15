@@ -3,6 +3,7 @@ import {
     TRACKER_DONE_LOADING,
     TRACKER_SUCCESS,
     TRACKER_SEMESTER_SELECTED,
+    TRACKER_CLASS_SELECTED,
     SERVER_ERROR,
     CLIENT_ERROR
 } from '../actions/actionTypes'
@@ -10,6 +11,7 @@ import {
 const initialState = {
     semesters: [],
     selected_semester_id: localStorage.getItem('selected_semester_id'),
+    selected_class_id: localStorage.getItem('selected_class_id'),
     isLoading: false
 }
 
@@ -35,6 +37,12 @@ function trackerReducerFunction(state = initialState, action) {
             return {
                 ...state,
                 selected_semester_id: action.payload.selected_semester_id
+            }
+        case TRACKER_CLASS_SELECTED:
+            localStorage.setItem('selected_class_id', action.payload.selected_class_id)
+            return {
+                ...state,
+                selected_class_id: action.payload.selected_class_id
             }
         case SERVER_ERROR:
         case CLIENT_ERROR:
