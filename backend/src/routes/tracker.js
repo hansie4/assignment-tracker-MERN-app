@@ -32,6 +32,12 @@ router.post('/semester', auth, async (req, res) => {
 
     // Checking that required parameters are present
     if (!name) return res.status(400).json({ msg: 'Semester name is required' })
+    if (start_date && !end_date) {
+        return res.status(400).json({ msg: 'End date is required' })
+    }
+    if (!start_date && end_date) {
+        return res.status(400).json({ msg: 'Start date is required' })
+    }
 
     // Creating new semester document
     const newSemester = new Semester({
@@ -104,6 +110,12 @@ router.put('/semester', auth, async (req, res) => {
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
     if (!new_name && !new_start_date && !new_end_date) return res.status(400).json({ msg: 'New value to update is required' })
+    if (new_start_date && !new_end_date) {
+        return res.status(400).json({ msg: 'End date is required' })
+    }
+    if (!new_start_date && new_end_date) {
+        return res.status(400).json({ msg: 'Start date is required' })
+    }
 
     // Query
     await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
