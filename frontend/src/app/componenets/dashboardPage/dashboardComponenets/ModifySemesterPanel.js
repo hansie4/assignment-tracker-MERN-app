@@ -103,8 +103,7 @@ const handleChange = (event, setMethod) => {
 }
 
 const formatedDate = (date) => {
-    // const d = Date(date)
-    return date
+    return new Date(date)
 }
 
 const mapStateToProps = state => ({
