@@ -381,7 +381,7 @@ export const addInstructor = ({ class_id, semester_id, name, email_address, offi
         return dispatch({ type: TRACKER_DONE_LOADING })
     }
     if (!name) {
-        dispatch(setError(400, 'Semester name is required'))
+        dispatch(setError(400, 'Instructor name is required'))
         return dispatch({ type: TRACKER_DONE_LOADING })
     }
 
