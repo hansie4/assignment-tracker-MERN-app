@@ -45,7 +45,7 @@ export const getAccountInfo = () => async (dispatch, getState) => {
         .catch(async (error) => {
             if (error.response) {
                 if (error.response.status === 401) {
-                    await dispatch(handle401Error(getAccountInfo, {}, []))
+                    await dispatch(handle401Error(getAccountInfo, {}))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
@@ -88,7 +88,7 @@ export const changeEmailAddress = ({ new_email_address }) => async (dispatch, ge
         .catch(async (error) => {
             if (error.response) {
                 if (error.response.status === 401) {
-                    await dispatch(handle401Error(changeEmailAddress, { new_email_address }, []))
+                    await dispatch(handle401Error(changeEmailAddress, { new_email_address }))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
@@ -131,7 +131,7 @@ export const changeUsername = ({ new_username }) => async (dispatch, getState) =
         .catch(async (error) => {
             if (error.response) {
                 if (error.response.status === 401) {
-                    await dispatch(handle401Error(changeUsername, { new_username }, []))
+                    await dispatch(handle401Error(changeUsername, { new_username }))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
@@ -179,7 +179,7 @@ export const changePassword = ({ new_password, accessToken }) => async (dispatch
         .catch(async (error) => {
             if (error.response) {
                 if (error.response.status === 401) {
-                    await dispatch(handle401Error(changePassword, { new_password }, []))
+                    await dispatch(handle401Error(changePassword, { new_password }))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
@@ -208,7 +208,7 @@ export const logoutUser = () => async (dispatch, getState) => {
         .catch(async (error) => {
             if (error.response) {
                 if (error.response.status === 401) {
-                    await dispatch(handle401Error(logoutUser, {}, []))
+                    await dispatch(handle401Error(logoutUser, {}))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
@@ -239,7 +239,7 @@ export const logoutUserAllDevices = () => async (dispatch, getState) => {
         .catch(async (error) => {
             if (error.response) {
                 if (error.response.status === 401) {
-                    await dispatch(handle401Error(logoutUserAllDevices, {}, []))
+                    await dispatch(handle401Error(logoutUserAllDevices, {}))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
@@ -270,7 +270,7 @@ export const deleteAccount = () => async (dispatch, getState) => {
         .catch(async (error) => {
             if (error.response) {
                 if (error.response.status === 401) {
-                    await dispatch(handle401Error(deleteAccount, {}, []))
+                    await dispatch(handle401Error(deleteAccount, {}))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }

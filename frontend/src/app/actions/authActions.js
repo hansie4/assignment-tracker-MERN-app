@@ -201,15 +201,12 @@ export const authTokenConfig = getState => {
     return config
 }
 
-export const handle401Error = (actionToCallAfterRefresh, functionArgumentsObject, typesToDispatchOnFail) => async (dispatch) => {
+export const handle401Error = (actionToCallAfterRefresh, functionArgumentsObject) => async (dispatch) => {
     const refreshSuccessful = await dispatch(refreshToken())
 
     if (refreshSuccessful) {
         await dispatch(actionToCallAfterRefresh(functionArgumentsObject))
     } else {
-        typesToDispatchOnFail.forEach(type => {
-            dispatch({ type: type })
-        })
         dispatch({ type: AUTH_LOGOUT })
     }
 }
