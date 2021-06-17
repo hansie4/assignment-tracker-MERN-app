@@ -109,7 +109,7 @@ router.put('/semester', auth, async (req, res) => {
 
     // Checking that parameters are present
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
-    if (!new_name && !new_start_date && !new_end_date) return res.status(400).json({ msg: 'New value to update is required' })
+    if (!new_name && !new_start_date && !new_end_date && !deleteDates) return res.status(400).json({ msg: 'New value to update is required' })
     if (new_start_date && !new_end_date) {
         return res.status(400).json({ msg: 'End date is required' })
     }
@@ -481,7 +481,14 @@ router.delete('/assignment_type', auth, async (req, res) => {
             // Checking if an assignment type with that id exists for the class
             if (!doc.semesters.id(semester_id).classes.id(class_id).assignment_types.id(assignment_type_id)) return res.status(404).json({ msg: 'Assignment_type with that id could not be found in class' })
 
-            // Removing the class
+            // Checking if assignment is using the assignment type
+            const assignmentUsingType = doc.semesters.id(semester_id).classes.id(class_id).assignments.find((value) => value.assignment_type_id == assignment_type_id)
+
+            if (assignmentUsingType) {
+                return res.status(400).json({ msg: 'Cannot remove assignment type while in use by assignment' })
+            }
+
+            // Removing the assignment type
             doc.semesters.id(semester_id).classes.id(class_id).assignment_types.pull({ _id: assignment_type_id })
 
             // Saving the changes
@@ -565,7 +572,7 @@ router.post('/assignment', auth, async (req, res) => {
         notes,
         due_date,
         assignment_type_id,
-        turned_in,
+        turned_in: (grade ? true : turned_in),
         grade
     })
 
@@ -674,7 +681,7 @@ router.put('/assignment', auth, async (req, res) => {
             if (new_due_date) doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ due_date: new_due_date })
             if (new_assignment_type_id) doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ assignment_type_id: new_assignment_type_id })
             if (new_turned_in) doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ turned_in: new_turned_in })
-            if (new_grade) doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ grade: new_grade })
+            if (new_grade) doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ grade: new_grade, turned_in: true })
 
             // Saving the changes
             doc.save((err) => {
