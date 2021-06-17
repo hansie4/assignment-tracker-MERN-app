@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { connect } from 'react-redux'
 
-import { addClass } from '../../../../actions/trackerActions'
+import { addClass } from '../../../actions/trackerActions'
 
 import Modal from 'react-bootstrap/Modal'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
