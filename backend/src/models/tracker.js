@@ -60,7 +60,8 @@ const AssignmentSchema = new mongoose.Schema({
         require: [true, 'Assignment turned in status required']
     },
     grade: {
-        type: mongoose.Schema.Types.Number
+        type: mongoose.Schema.Types.Number,
+        min: [0, 'Grade cant be less than 0']
     }
 })
 
