@@ -13,6 +13,8 @@ import Card from 'react-bootstrap/Card'
 import ClassSelectPanel from "./ClassSelectPanel"
 import ClassInfoPanel from "./ClassInfoPanel"
 import InstructorsPanel from './InstructorsPanel'
+import AssignmentTypesPanel from './AssignmentTypesPanel'
+import ClassAssignmentsPanel from './ClassAssignmentsPanel'
 
 function SemesterPanel({
     semester,
@@ -36,7 +38,7 @@ function SemesterPanel({
         <Container >
             {
                 (semester.start_date && semester.end_date) ?
-                    <Row className='mb-3'>
+                    <Row>
                         <Col>
                             <Card className='border border-dark'>
                                 <Card.Header>
@@ -51,22 +53,30 @@ function SemesterPanel({
                     :
                     null
             }
-            <Row className='mb-3'>
-                <Col lg={3}>
+            <Row className='mt-3 border-top border-dark'>
+                <Col className='mb-3 pt-3' lg={3}>
                     <ClassSelectPanel classes={semester.classes} />
                 </Col>
                 {
                     selectedClass ?
-                        <Col lg={9}>
+                        <Col className='pt-3' lg={9}>
                             <Container className='p-0'>
-                                <Row className='mb-3'>
-                                    <Col lg={12}>
+                                <Row>
+                                    <Col className='mb-3' lg={6}>
                                         <ClassInfoPanel selectedClass={selectedClass} />
                                     </Col>
+                                    <Col className='mb-3' lg={6}>
+                                        <AssignmentTypesPanel assignmentTypes={selectedClass.assignment_types} />
+                                    </Col>
                                 </Row>
-                                <Row className='mb-3'>
-                                    <Col lg={12}>
+                                <Row>
+                                    <Col className='mb-3' lg={12}>
                                         <InstructorsPanel instructors={selectedClass.instructors} />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col className='mb-3' lg={12}>
+                                        <ClassAssignmentsPanel selectedClass={selectedClass} />
                                     </Col>
                                 </Row>
                             </Container>

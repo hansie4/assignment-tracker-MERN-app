@@ -1,11 +1,11 @@
-import { useState } from 'react'
+import { useState } from "react"
 
-import { connect } from 'react-redux'
+import { connect } from "react-redux"
 
 import {
-    addInstructor,
-    deleteInstructor
-} from '../../../actions/trackerActions'
+    addAssignmentType,
+    deleteAssignmentType
+} from "../../../actions/trackerActions"
 
 import Card from 'react-bootstrap/Card'
 import Table from 'react-bootstrap/Table'
@@ -13,26 +13,25 @@ import Button from 'react-bootstrap/Button'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 
-import { PlusCircleFill, XCircleFill, GearFill } from 'react-bootstrap-icons'
+import { GearFill, XCircleFill, PlusCircleFill } from 'react-bootstrap-icons'
 
-function InstructorsPanel({
-    instructors,
-    addInstructor,
-    deleteInstructor,
+function AssignmentTypesPanel({
+    assignmentTypes,
+    addAssignmentType,
+    deleteAssignmentType,
     selected_semester_id,
     selected_class_id
 }) {
 
     const [modify, setModify] = useState(false)
-    const [name, setName] = useState(null)
-    const [email_address, setEmail] = useState(null)
-    const [office_hours_info, setInfo] = useState(null)
+    const [new_name, setNewName] = useState(null)
+    const [new_weight, setNewWeight] = useState(null)
 
     return (
         <Card className='border border-dark'>
             <Card.Header className='p-0'>
                 <div className='d-flex justify-content-between'>
-                    <Card.Title className='m-2 text-decoration-underline'>Instructors:</Card.Title>
+                    <Card.Title className='m-2 text-decoration-underline'>Assignment Types:</Card.Title>
                     <Button onClick={() => setModify(!modify)} className='m-0' variant='secondary'>
                         {
                             modify ?
@@ -48,22 +47,20 @@ function InstructorsPanel({
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Email Address</th>
-                            <th>Office Hours Info</th>
+                            <th>Weight</th>
                             {modify ? <th></th> : null}
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            instructors.map((value, index) => {
+                            assignmentTypes.map((value, index) => {
                                 return (
                                     <tr key={index}>
                                         <th>{value.name}</th>
-                                        <th>{value.email_address}</th>
-                                        <th>{value.office_hours_info}</th>
+                                        <th>{value.weight}%</th>
                                         {
                                             modify ?
-                                                <th><Button size='sm' className='m-0' variant='danger' onClick={() => deleteInstructor({ class_id: selected_class_id, semester_id: selected_semester_id, instructor_id: value._id })}><XCircleFill className='mb-1' /></Button></th>
+                                                <th><Button size='sm' className='m-0' variant='danger' onClick={() => deleteAssignmentType({ assignment_type_id: value._id, class_id: selected_class_id, semester_id: selected_semester_id })}><XCircleFill className='mb-1' /></Button></th>
                                                 :
                                                 null
                                         }
@@ -76,14 +73,20 @@ function InstructorsPanel({
                         modify ?
                             <tfoot>
                                 <tr>
-                                    <th className='p-0'><InputGroup size='sm'><FormControl placeholder='Name' onChange={(event) => handleChange(event, setName)} /></InputGroup></th>
-                                    <th className='p-0'><InputGroup size='sm'><FormControl placeholder='Email Address' onChange={(event) => handleChange(event, setEmail)} /></InputGroup></th>
-                                    <th className='p-0'><InputGroup size='sm'><FormControl placeholder='Office Hours Info' onChange={(event) => handleChange(event, setInfo)} /></InputGroup></th>
-                                    <th className='p-0'><InputGroup size='sm'><Button size='sm' onClick={() => addInstructor({ class_id: selected_class_id, semester_id: selected_semester_id, name, email_address, office_hours_info })} className='m-0 h-100 w-100' variant='outline-success'><PlusCircleFill className='mb-1' /></Button></InputGroup></th>
+                                    <th className='p-0'><InputGroup size='sm'><FormControl placeholder='Name' onChange={(event) => handleChange(event, setNewName)} /></InputGroup></th>
+                                    <th className='p-0'><InputGroup size='sm'><FormControl placeholder='Weight' type='number' onChange={(event) => handleChange(event, setNewWeight)} /><InputGroup.Append><InputGroup.Text>%</InputGroup.Text></InputGroup.Append></InputGroup></th>
+                                    <th className='p-0'><InputGroup size='sm'><Button size='sm' onClick={() => addAssignmentType({ class_id: selected_class_id, semester_id: selected_semester_id, name: new_name, weight: new_weight })} className='m-0 h-100 w-100' variant='outline-success'><PlusCircleFill className='mb-1' /></Button></InputGroup></th>
                                 </tr>
                             </tfoot>
                             :
-                            null
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                        {assignmentTypes.reduce((total, currentAssignmentType) => total + currentAssignmentType.weight, 0)}%
+                                    </th>
+                                </tr>
+                            </tfoot>
                     }
                 </Table>
             </Card.Body>
@@ -101,8 +104,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-    addInstructor,
-    deleteInstructor
+    addAssignmentType,
+    deleteAssignmentType
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InstructorsPanel)
+export default connect(mapStateToProps, mapDispatchToProps)(AssignmentTypesPanel)

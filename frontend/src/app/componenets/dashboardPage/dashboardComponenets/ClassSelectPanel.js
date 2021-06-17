@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button'
 
 import { PlusCircle } from 'react-bootstrap-icons'
 
-import AddClassModal from './modals/AddClassModal'
+import AddClassModal from './AddClassModal'
 
 function ClassSelectPanel({
     classes,
@@ -47,9 +47,11 @@ function ClassSelectPanel({
                                 :
                                 null
                         }
-                        <Button variant='light' onClick={() => setAddClassModalShown(true)}><PlusCircle /></Button>
                     </ButtonGroup>
                 </Card.Body>
+                <Card.Footer className='p-0'>
+                    <Button block variant='light' onClick={() => setAddClassModalShown(true)}><PlusCircle /></Button>
+                </Card.Footer>
             </Card>
         </div>
     )

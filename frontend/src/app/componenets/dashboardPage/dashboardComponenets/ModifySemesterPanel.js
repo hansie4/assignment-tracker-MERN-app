@@ -20,6 +20,7 @@ function ModifySemesterPanel(props) {
     const [new_name, setNewSemesterName] = useState(null)
     const [new_start_date, setNewStartDate] = useState(null)
     const [new_end_date, setNewEndDate] = useState(null)
+    const [deleteDates, setDeleteDates] = useState(false)
 
     return (
         <div className="p-3">
@@ -29,41 +30,31 @@ function ModifySemesterPanel(props) {
                     <hr />
                     <InputGroup className="mb-3">
                         <InputGroup.Prepend>
-                            <InputGroup.Text>Current Semester Name:</InputGroup.Text>
+                            <InputGroup.Text>Semester Name:</InputGroup.Text>
                         </InputGroup.Prepend>
-                        <FormControl placeholder={props.semester.name} disabled />
-                    </InputGroup>
-                    <InputGroup className="mb-3">
-                        <InputGroup.Prepend>
-                            <InputGroup.Text>New Semester Name:</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl onChange={(event) => handleChange(event, setNewSemesterName)} disabled={props.isLoading} />
+                        <FormControl defaultValue={props.semester.name} onChange={(event) => handleChange(event, setNewSemesterName)} disabled={props.isLoading} />
                     </InputGroup>
                     <hr />
                     <InputGroup className="mb-3">
                         <InputGroup.Prepend>
-                            <InputGroup.Text>Current Start Date:</InputGroup.Text>
+                            <InputGroup.Text>Start Date:</InputGroup.Text>
                         </InputGroup.Prepend>
-                        <FormControl placeholder={props.semester.start_date ? formatedDate(props.semester.start_date) : 'null'} disabled />
-                    </InputGroup>
-                    <InputGroup className="mb-3">
-                        <InputGroup.Prepend>
-                            <InputGroup.Text>New Start Date:</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl type='date' onChange={(event) => handleChange(event, setNewStartDate)} disabled={props.isLoading} />
+                        <FormControl defaultValue={props.semester.start_date ? formatDate(new Date(props.semester.start_date)) : null} type='date' onChange={(event) => handleChange(event, setNewStartDate)} disabled={props.isLoading} />
                     </InputGroup>
                     <hr />
                     <InputGroup className="mb-3">
                         <InputGroup.Prepend>
-                            <InputGroup.Text>Current Start End:</InputGroup.Text>
+                            <InputGroup.Text>End Date:</InputGroup.Text>
                         </InputGroup.Prepend>
-                        <FormControl placeholder={props.semester.end_date ? formatedDate(props.semester.end_date) : 'null'} disabled />
+                        <FormControl defaultValue={props.semester.end_date ? formatDate(new Date(props.semester.end_date)) : null} type='date' onChange={(event) => handleChange(event, setNewEndDate)} disabled={props.isLoading} />
                     </InputGroup>
                     <InputGroup className="mb-3">
                         <InputGroup.Prepend>
-                            <InputGroup.Text>New End Date:</InputGroup.Text>
+                            <InputGroup.Text>Remove Dates?</InputGroup.Text>
                         </InputGroup.Prepend>
-                        <FormControl type='date' onChange={(event) => handleChange(event, setNewEndDate)} disabled={props.isLoading} />
+                        <InputGroup.Append>
+                            <InputGroup.Checkbox onChange={(event) => handleCheckInput(event, setDeleteDates)} />
+                        </InputGroup.Append>
                     </InputGroup>
                     <hr />
                     <div className="d-flex justify-content-center mb-3">
@@ -73,7 +64,7 @@ function ModifySemesterPanel(props) {
                                     <Spinner animation="border" size="sm" />
                                 </Button>
                                 :
-                                <Button variant="success" className="w-50" onClick={() => props.modifySemester({ semester_id: props.selected_semester_id, new_name, new_start_date, new_end_date })}>
+                                <Button variant="success" className="w-50" onClick={() => props.modifySemester({ semester_id: props.selected_semester_id, new_name, new_start_date, new_end_date, deleteDates })}>
                                     Save Changes
                                     <Save className='ms-2' />
                                 </Button>
@@ -102,8 +93,15 @@ const handleChange = (event, setMethod) => {
     setMethod(event.target.value)
 }
 
-const formatedDate = (date) => {
-    return new Date(date)
+const handleCheckInput = (event, setMethod) => {
+    setMethod(event.target.checked)
+}
+
+const formatDate = (date) => {
+    const month = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(date)
+    const day = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date)
+    const year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date)
+    return (`${year}-${month}-${day}`)
 }
 
 const mapStateToProps = state => ({

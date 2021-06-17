@@ -22,7 +22,7 @@ function ClassInfoPanel({
     selected_semester_id
 }) {
 
-    const [modifyMode, setModifyMode] = useState(false)
+    const [modify, setModify] = useState(false)
 
     const [new_name, setNewName] = useState(null)
     const [new_description, setNewDescription] = useState(null)
@@ -30,43 +30,56 @@ function ClassInfoPanel({
     if (selectedClass) {
         return (
             <Card className='border border-dark'>
-                <Card.Header className='d-flex justify-content-between p-1 ps-3'>
+                <Card.Header className='p-0'>
+                    <div className='d-flex justify-content-between'>
+                        <Card.Title className='m-2 text-decoration-underline'>{selectedClass.name}:</Card.Title>
+                        <Button onClick={() => setModify(!modify)} className='m-0' variant='secondary'>
+                            {
+                                modify ?
+                                    <XCircleFill className='mb-1' />
+                                    :
+                                    <GearFill className='mb-1' />
+                            }
+                        </Button>
+                    </div>
+                </Card.Header>
+                {/* <Card.Header className='d-flex justify-content-between p-1 ps-3'>
                     <h3>{selectedClass.name}</h3>
                     <ButtonGroup size="sm">
                         <Button variant='secondary' onClick={() => setModifyMode(!modifyMode)}><GearFill /></Button>
                         <Button variant='danger' onClick={() => deleteClass({ class_id: selectedClass._id, semester_id: selected_semester_id })}><TrashFill /></Button>
                     </ButtonGroup>
-                </Card.Header>
+                </Card.Header> */}
                 <Card.Body>
                     {
-                        modifyMode ?
+                        modify ?
                             <InputGroup className='mb-3'>
                                 <InputGroup.Prepend>
                                     <InputGroup.Text>New Class Name:</InputGroup.Text>
                                 </InputGroup.Prepend>
-                                <FormControl placeholder={selectedClass.name} onChange={(event) => handleChange(event, setNewName)} />
+                                <FormControl defaultValue={selectedClass.name} onChange={(event) => handleChange(event, setNewName)} />
                             </InputGroup>
                             :
                             null
                     }
                     <Card.Title>Description:</Card.Title>
                     {
-                        modifyMode ?
+                        modify ?
                             <InputGroup className='mb-3'>
                                 <InputGroup.Prepend>
                                     <InputGroup.Text>New Description:</InputGroup.Text>
                                 </InputGroup.Prepend>
-                                <FormControl placeholder={selectedClass.description} onChange={(event) => handleChange(event, setNewDescription)} />
+                                <FormControl defaultValue={selectedClass.description} onChange={(event) => handleChange(event, setNewDescription)} />
                             </InputGroup>
                             :
                             <Card.Text>{selectedClass.description}</Card.Text>
                     }
                 </Card.Body>
                 {
-                    modifyMode ?
+                    modify ?
                         <Card.Footer>
                             <ButtonGroup className='w-100'>
-                                <Button variant='secondary' onClick={() => setModifyMode(false)}><XCircleFill /></Button>
+                                <Button variant='danger' onClick={() => deleteClass({ class_id: selectedClass._id, semester_id: selected_semester_id })}><TrashFill /></Button>
                                 <Button variant='success' onClick={() => modifyClass({ class_id: selectedClass._id, semester_id: selected_semester_id, new_name, new_description })}><CheckCircleFill /></Button>
                             </ButtonGroup>
                         </Card.Footer>
