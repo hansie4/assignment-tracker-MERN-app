@@ -1,7 +1,6 @@
 node_modules/
 
-backend/configs.env
+configs.env
 
 .vscode/
-todo
-backend/jsdoc.json
+
