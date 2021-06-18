@@ -92,7 +92,7 @@ const ClassSchema = new mongoose.Schema({
     },
     description: {
         type: mongoose.Schema.Types.String,
-        maxLength: [500, 'Class name must be less than 501 characters long']
+        maxLength: [2000, 'Class description must be less than 2001 characters long']
     },
     instructors: {
         type: [InstructorSchema]
