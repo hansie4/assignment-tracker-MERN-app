@@ -175,7 +175,7 @@ const getAssignmentTypeAverage = (grades, includeOnlyGradedAssignments) => {
         if (numberOfAssignments > 0) {
             average = gradeSum / numberOfAssignments
         } else {
-            average = null
+            average = 0
         }
     }
 
@@ -199,7 +199,7 @@ const createWeightedGradeMatrix = (assignment_types, assignments, includeOnlyGra
 }
 
 const getFinalClassGrade = (weightedGradeMatrix) => {
-    let final = weightedGradeMatrix.reduce((average, currentRow) => (currentRow[4] ? (((currentRow[2] / 100) * currentRow[4]) + average) : average), 0)
+    let final = weightedGradeMatrix.reduce((average, currentRow) => ((currentRow[4] !== null) ? (((currentRow[2] / 100) * currentRow[4]) + average) : (((currentRow[2] / 100) * 100) + average)), 0)
 
     return final
 }
