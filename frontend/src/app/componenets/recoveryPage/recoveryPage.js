@@ -31,7 +31,7 @@ function RecoveryPage(props) {
                     <Card>
                         <Card.Header as='h3' className='text-center'>Assignment Tracker Password Recovery</Card.Header>
                         <Card.Body>
-                            <Form noValidate onSubmit={(event) => submit(event, email_address, props.recoveryEmail, setEmailSent, props.setError)}>
+                            <Form noValidate>
                                 <Form.Group>
                                     <Form.Label>Email for Account to Recover</Form.Label>
                                     <Form.Control
@@ -44,14 +44,16 @@ function RecoveryPage(props) {
                                 <br />
                                 {
                                     props.error ?
-                                        <Alert variant='danger'>{props.error.message}</Alert> :
+                                        <Alert variant='danger'>{props.error.message}</Alert>
+                                        :
                                         null
                                 }
                                 <Form.Group className='d-flex justify-content-end'>
-                                    <Button type='submit' disabled={props.isLoading} className='w-100'>
+                                    <Button onClick={() => submit(email_address, props.recoveryEmail, setEmailSent, props.setError)} disabled={props.isLoading} className='w-100'>
                                         {
                                             props.isLoading ?
-                                                <Spinner animation='border' size='sm' /> :
+                                                <Spinner animation='border' size='sm' />
+                                                :
                                                 <span>
                                                     {emailSent ? 'Resend Email' : 'Send Email'}
                                                     <Envelope className='ms-2' size={20} />
@@ -62,6 +64,9 @@ function RecoveryPage(props) {
                                 <Form.Text className='text-muted'>Make sure to check spam folder if you don't see the email immediately.</Form.Text>
                             </Form>
                         </Card.Body>
+                        <Card.Footer>
+                            <a href='/login'>Ready to login?</a>
+                        </Card.Footer>
                     </Card>
                 </Col>
             </Row>
@@ -69,8 +74,7 @@ function RecoveryPage(props) {
     )
 }
 
-const submit = (event, email_address, recoverAccountMethod, setEmailSent, setErrorMethod) => {
-    event.preventDefault()
+const submit = (email_address, recoverAccountMethod, setEmailSent, setErrorMethod) => {
     if (!email_address) {
         setErrorMethod(null, 'Email address is required')
     } else if (!(/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/.test(email_address))) {
@@ -87,7 +91,8 @@ const handleChange = (event, setMethod, error, clearErrorMethod) => {
 }
 
 const mapStateToProps = state => ({
-    isLoading: state.auth.isLoading
+    isLoading: state.auth.isLoading,
+    error: state.error.error
 })
 
 const mapDispatchToProps = {
