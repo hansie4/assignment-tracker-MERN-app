@@ -39,8 +39,8 @@ function AddClassModal(props) {
             </Modal.Body>
             <Modal.Footer>
                 <ButtonGroup className='w-100'>
-                    <Button disabled={props.isLoading} variant='primary' onClick={() => props.addClass({ semester_id: props.selected_semester_id, name, description })}><PlusCircleFill /></Button>
                     <Button disabled={props.isLoading} variant='secondary' onClick={() => props.close()}><XCircleFill /></Button>
+                    <Button disabled={props.isLoading} variant='primary' onClick={() => props.addClass({ semester_id: props.selected_semester_id, name, description })}><PlusCircleFill /></Button>
                 </ButtonGroup>
             </Modal.Footer>
         </Modal>
