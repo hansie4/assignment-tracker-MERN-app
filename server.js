@@ -34,9 +34,9 @@ app.use('/tracker', trackerRoute)
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static('frontend/build'))
 
-    app.get('*', (req, res => {
+    app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
-    }))
+    })
 }
 
 // Connect to Database
@@ -50,7 +50,7 @@ mongoose.connect(process.env.DATABASE_URI, {
         console.log('Connected to MongoDB Database')
 
         app.listen(process.env.PORT, () => {
-            console.log(`Assignment Tracker backend listening at http://localhost:${process.env.PORT}`)
+            console.log(`Assignment Tracker backend listening on port ${process.env.PORT}`)
         })
     })
     .catch(error => {
