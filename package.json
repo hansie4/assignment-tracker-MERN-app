@@ -4,8 +4,8 @@
   "description": "The backend for a MERN app to help students keep track of their assignments.",
   "main": "server.js",
   "scripts": {
-    "start": "node src/server.js",
-    "startDev": "nodemon src/server.js",
+    "start": "node server.js",
+    "startDev": "nodemon server.js",
     "doc": "jsdoc -c jsdoc.json",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
