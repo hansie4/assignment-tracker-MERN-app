@@ -170,6 +170,8 @@ export const recoveryEmail = ({ email_address }) => async (dispatch, getState) =
             if (error.response) {
                 if (error.response.status === 401) {
                     dispatch(setError(error.response.status, 'Invalid credentials'))
+                } else if (error.response.status === 404) {
+                    dispatch(setError(error.response.status, 'Account with that email address could not be found'))
                 } else {
                     dispatch(setError(error.response.status, error.response.data.msg))
                 }
