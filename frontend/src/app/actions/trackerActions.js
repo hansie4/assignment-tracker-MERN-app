@@ -12,7 +12,8 @@ import {
 
 import {
     authTokenConfig,
-    handle401Error
+    handle401Error,
+    getOffsetDate
 } from './authActions'
 
 import {
@@ -75,8 +76,8 @@ export const addSemester = ({ name, start_date, end_date }) => async (dispatch, 
     const url = '/tracker/semester'
     const body = {
         name,
-        start_date,
-        end_date
+        start_date: getOffsetDate(start_date),
+        end_date: getOffsetDate(end_date)
     }
     const config = authTokenConfig(getState)
 
@@ -174,8 +175,8 @@ export const modifySemester = ({ semester_id, new_name, new_start_date, new_end_
     const url = '/tracker/semester'
     const body = {
         new_name,
-        new_start_date,
-        new_end_date,
+        new_start_date: getOffsetDate(new_start_date),
+        new_end_date: getOffsetDate(new_end_date),
         deleteDates
     }
     let config = authTokenConfig(getState)
@@ -611,7 +612,7 @@ export const addAssignment = ({ class_id, semester_id, name, notes, due_date, as
     const body = {
         name,
         notes,
-        due_date,
+        due_date: getOffsetDate(due_date),
         assignment_type_id,
         turned_in,
         grade
@@ -726,7 +727,7 @@ export const modifyAssignment = ({ assignment_id, class_id, semester_id, new_nam
     const body = {
         new_name,
         new_notes,
-        new_due_date,
+        new_due_date: getOffsetDate(new_due_date),
         new_assignment_type_id,
         new_turned_in,
         new_grade

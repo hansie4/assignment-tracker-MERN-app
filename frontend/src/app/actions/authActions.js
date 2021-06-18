@@ -218,3 +218,13 @@ export const initialAuthLoad = () => async (dispatch, getState) => {
     await dispatch(refreshToken())
     dispatch({ type: AUTH_DONE_LOADING })
 }
+
+export const getOffsetDate = (due_date) => {
+    if (due_date) {
+        const date = new Date(due_date)
+        const diff = new Date(due_date).getTimezoneOffset()
+        return new Date(date.getTime() + (diff * 1000 * 60))
+    } else {
+        return null
+    }
+}
