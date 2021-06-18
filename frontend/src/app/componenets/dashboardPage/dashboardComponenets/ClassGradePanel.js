@@ -97,7 +97,7 @@ function ClassGradePanel({
                                                     </th>
                                                     <th>
                                                         {
-                                                            gradeMatrix_row[4] ? gradeMatrix_row[4].toFixed(1) + '%' : null
+                                                            (gradeMatrix_row[4] !== null) ? gradeMatrix_row[4].toFixed(1) + '%' : null
                                                         }
                                                     </th>
                                                 </tr>
@@ -159,7 +159,7 @@ const createGradeMatrix = (assignment_types, assignments) => {
 
 const getAssignmentTypeAverage = (grades, includeOnlyGradedAssignments) => {
     let average
-    const gradeSum = grades.reduce((total, currentGrade) => (currentGrade ? total + currentGrade : total), 0)
+    let gradeSum = grades.reduce((total, currentGrade) => (currentGrade ? total + currentGrade : total), 0)
     let numberOfAssignments
     if (includeOnlyGradedAssignments) {
         numberOfAssignments = grades.reduce((total, currentAssignment) => (currentAssignment ? total + 1 : total), 0)
