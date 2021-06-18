@@ -36,8 +36,12 @@ function ClassSelectPanel({
                                     return (
                                         <Button
                                             key={index}
-                                            onClick={() => selectClass(current_class._id)}
-                                            disabled={current_class._id === selected_class_id}
+                                            onClick={() => {
+                                                if (current_class._id !== selected_class_id) {
+                                                    selectClass(current_class._id)
+                                                }
+                                            }}
+                                            variant={(current_class._id === selected_class_id) ? 'dark' : 'outline-dark'}
                                             className='w-100'
                                         >
                                             {current_class.name}

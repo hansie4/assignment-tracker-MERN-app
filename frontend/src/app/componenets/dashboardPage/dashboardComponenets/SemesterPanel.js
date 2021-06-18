@@ -15,6 +15,7 @@ import ClassInfoPanel from "./ClassInfoPanel"
 import InstructorsPanel from './InstructorsPanel'
 import AssignmentTypesPanel from './AssignmentTypesPanel'
 import ClassAssignmentsPanel from './ClassAssignmentsPanel'
+import ClassGradePanel from './ClassGradePanel'
 
 function SemesterPanel({
     semester,
@@ -55,7 +56,23 @@ function SemesterPanel({
             }
             <Row className='mt-3 border-top border-dark'>
                 <Col className='mb-3 pt-3' lg={3}>
-                    <ClassSelectPanel classes={semester.classes} />
+                    <Container className='p-0'>
+                        <Row>
+                            <Col className='mb-3'>
+                                <ClassSelectPanel classes={semester.classes} />
+                            </Col>
+                        </Row>
+                        {
+                            selectedClass ?
+                                <Row>
+                                    <Col className='mb-3'>
+                                        <AssignmentTypesPanel assignmentTypes={selectedClass.assignment_types} />
+                                    </Col>
+                                </Row>
+                                :
+                                null
+                        }
+                    </Container>
                 </Col>
                 {
                     selectedClass ?
@@ -66,7 +83,7 @@ function SemesterPanel({
                                         <ClassInfoPanel selectedClass={selectedClass} />
                                     </Col>
                                     <Col className='mb-3' lg={6}>
-                                        <AssignmentTypesPanel assignmentTypes={selectedClass.assignment_types} />
+                                        <ClassGradePanel selectedClass={selectedClass} />
                                     </Col>
                                 </Row>
                                 <Row>

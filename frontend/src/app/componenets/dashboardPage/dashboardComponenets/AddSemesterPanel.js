@@ -9,6 +9,7 @@ import {
     clearError
 } from '../../../actions/errorActions'
 
+import Container from 'react-bootstrap/Container'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
@@ -25,7 +26,7 @@ function AddSemesterPanel(props) {
     return (
         <div className="p-3">
             <div className='w-100 d-flex justify-content-center'>
-                <div className='w-50'>
+                <Container>
                     <h2>Add New Semester</h2>
                     <hr />
                     <InputGroup className="mb-3">
@@ -62,7 +63,7 @@ function AddSemesterPanel(props) {
                                 </Button>
                         }
                     </div>
-                </div>
+                </Container>
             </div>
         </div >
     )

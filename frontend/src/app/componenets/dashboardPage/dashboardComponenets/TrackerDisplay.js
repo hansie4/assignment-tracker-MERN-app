@@ -18,7 +18,7 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Button from 'react-bootstrap/Button'
 import Spinner from 'react-bootstrap/Spinner'
 
-import { Gear } from 'react-bootstrap-icons'
+import { GearFill } from 'react-bootstrap-icons'
 import { Arrow90degLeft } from 'react-bootstrap-icons'
 
 import AddSemesterPanel from './AddSemesterPanel'
@@ -110,7 +110,7 @@ function TrackerDisplay({
                                         setModifyShown(true)
                                     }}
                                 >
-                                    <Gear />
+                                    <GearFill />
                                 </Button>
                             :
                             null

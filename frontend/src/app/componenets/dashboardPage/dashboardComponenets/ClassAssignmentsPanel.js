@@ -53,7 +53,7 @@ function ClassAssignmentsPanel({
 
     return (
         <div>
-            <AssignmentEditModal show={editModal} close={() => setEditModal(false)} assignment={assignmentToEdit} />
+            <AssignmentEditModal show={editModal} close={() => setEditModal(false)} assignment={assignmentToEdit} assignment_types={selectedClass.assignment_types} />
             <Card className='border border-dark'>
                 <Card.Header className='p-0'>
                     <div className='d-flex justify-content-between'>
@@ -69,7 +69,7 @@ function ClassAssignmentsPanel({
                     </div>
                 </Card.Header>
                 <Card.Body className='p-0'>
-                    <Table striped hover className='m-0' size='sm'>
+                    <Table striped hover className='m-0' size='sm' responsive>
                         <thead>
                             <tr>
                                 <th>Done?</th>
@@ -128,21 +128,39 @@ function ClassAssignmentsPanel({
                                                             selectedAssignmentType ?
                                                                 selectedAssignmentType.name
                                                                 :
-                                                                'No assignment types'
+                                                                'No assignment type selected'
                                                         }
                                                     </Button>
-                                                    <Dropdown.Toggle size='sm' variant='light' />
+                                                    <Dropdown.Toggle size='sm' variant='light' className='border-left' />
 
                                                     <Dropdown.Menu >
                                                         {
-                                                            selectedClass.assignment_types.map((value, index) => {
-                                                                return (
-                                                                    <Dropdown.Item key={index} onClick={() => setSelectedAssignmentType(value)}>
-                                                                        {value.name}
-                                                                    </Dropdown.Item>
-                                                                )
-                                                            })
+                                                            selectedAssignmentType ?
+                                                                selectedClass.assignment_types.map((value, index) => {
+                                                                    if (value._id !== selectedAssignmentType._id) {
+                                                                        return (
+                                                                            <Dropdown.Item key={index} onClick={() => setSelectedAssignmentType(value)}>
+                                                                                {value.name}
+                                                                            </Dropdown.Item>
+                                                                        )
+                                                                    } else {
+                                                                        return null
+                                                                    }
+                                                                })
+                                                                :
+                                                                selectedClass.assignment_types.map((value, index) => {
+                                                                    return (
+                                                                        <Dropdown.Item key={index} onClick={() => setSelectedAssignmentType(value)}>
+                                                                            {value.name}
+                                                                        </Dropdown.Item>
+                                                                    )
+                                                                })
                                                         }
+
+                                                        <Dropdown.Divider />
+                                                        <Dropdown.Item onClick={() => setSelectedAssignmentType(null)}>
+                                                            None
+                                                        </Dropdown.Item>
                                                     </Dropdown.Menu>
                                                 </Dropdown>
                                             </InputGroup>

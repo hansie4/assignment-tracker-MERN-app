@@ -44,7 +44,7 @@ function InstructorsPanel({
                 </div>
             </Card.Header>
             <Card.Body className='p-0'>
-                <Table striped hover className='m-0' size='sm'>
+                <Table striped hover className='m-0' size='sm' responsive>
                     <thead>
                         <tr>
                             <th>Name</th>

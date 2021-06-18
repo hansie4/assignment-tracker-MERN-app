@@ -7,6 +7,7 @@ import {
     deleteSemester
 } from '../../../actions/trackerActions'
 
+import Container from 'react-bootstrap/Container'
 import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
@@ -25,7 +26,7 @@ function ModifySemesterPanel(props) {
     return (
         <div className="p-3">
             <div className='w-100 d-flex justify-content-center'>
-                <div className='w-50'>
+                <Container>
                     <h2>Modify Semester</h2>
                     <hr />
                     <InputGroup className="mb-3">
@@ -83,7 +84,7 @@ function ModifySemesterPanel(props) {
                                 </Button>
                         }
                     </div>
-                </div>
+                </Container>
             </div>
         </div >
     )

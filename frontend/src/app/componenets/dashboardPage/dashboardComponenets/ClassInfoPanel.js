@@ -43,13 +43,6 @@ function ClassInfoPanel({
                         </Button>
                     </div>
                 </Card.Header>
-                {/* <Card.Header className='d-flex justify-content-between p-1 ps-3'>
-                    <h3>{selectedClass.name}</h3>
-                    <ButtonGroup size="sm">
-                        <Button variant='secondary' onClick={() => setModifyMode(!modifyMode)}><GearFill /></Button>
-                        <Button variant='danger' onClick={() => deleteClass({ class_id: selectedClass._id, semester_id: selected_semester_id })}><TrashFill /></Button>
-                    </ButtonGroup>
-                </Card.Header> */}
                 <Card.Body>
                     {
                         modify ?
