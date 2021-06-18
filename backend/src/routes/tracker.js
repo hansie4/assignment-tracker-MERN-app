@@ -660,7 +660,7 @@ router.put('/assignment', auth, async (req, res) => {
     if (!semester_id) return res.status(400).json({ msg: 'Semester id is required' })
     if (!class_id) return res.status(400).json({ msg: 'Class id is required' })
     if (!assignment_id) return res.status(400).json({ msg: 'Assignment id is required' })
-    if (!new_name && !new_notes && !new_due_date && !new_assignment_type_id && !new_turned_in && !new_grade) return res.status(400).json({ msg: 'New value to update is required' })
+    if (!new_name && !new_notes && !new_due_date && !new_assignment_type_id && (new_turned_in === null) && !new_grade) return res.status(400).json({ msg: 'New value to update is required' })
 
     await Tracker.findOne({ account_id: req.account_id }, (err, doc) => {
         if (err) {
@@ -680,7 +680,13 @@ router.put('/assignment', auth, async (req, res) => {
             if (new_notes) doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ notes: new_notes })
             if (new_due_date) doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ due_date: new_due_date })
             if (new_assignment_type_id) doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ assignment_type_id: new_assignment_type_id })
-            if (new_turned_in) doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ turned_in: new_turned_in })
+            if (new_turned_in !== null) {
+                if (new_turned_in) {
+                    doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ turned_in: new_turned_in })
+                } else {
+                    doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ turned_in: new_turned_in, grade: null })
+                }
+            }
             if (new_grade) doc.semesters.id(semester_id).classes.id(class_id).assignments.id(assignment_id).set({ grade: new_grade, turned_in: true })
 
             // Saving the changes
