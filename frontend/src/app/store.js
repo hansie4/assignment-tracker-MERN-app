@@ -9,20 +9,17 @@ import rootReducer from './reducers/rootReducer'
 
 const initialState = {};
 
-let store
+const devTools =
+    process.env.NODE_ENV === 'production' ?
+        applyMiddleware(thunk)
+        :
+        compose(applyMiddleware(thunk), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
-if (process.env.NODE_ENV === 'production') {
-    store = createStore(
-        rootReducer,
-        initialState,
-        compose(applyMiddleware(thunk)),
-    )
-} else {
-    store = createStore(
-        rootReducer,
-        initialState,
-        compose(applyMiddleware(thunk), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()),
-    )
-}
+
+const store = createStore(
+    rootReducer,
+    initialState,
+    devTools
+)
 
 export default store
