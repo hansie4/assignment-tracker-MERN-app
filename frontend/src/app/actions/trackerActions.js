@@ -612,7 +612,7 @@ export const addAssignment = ({ class_id, semester_id, name, notes, due_date, as
     const body = {
         name,
         notes,
-        due_date: getOffsetDate(due_date),
+        due_date: (due_date ? getOffsetDate(due_date) : getOffsetDate(new Date())),
         assignment_type_id,
         turned_in,
         grade
