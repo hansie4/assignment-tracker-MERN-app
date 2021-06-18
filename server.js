@@ -1,9 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cookieParser = require('cookie-parser')
-const authRoute = require('./routes/auth')
-const accountsRoute = require('./routes/account')
-const trackerRoute = require('./routes/tracker')
+const authRoute = require('./src/routes/auth')
+const accountsRoute = require('./src/routes/account')
+const trackerRoute = require('./src/routes/tracker')
+const path = require('path')
 
 /* ----------------------------------DEV---------------------------------- */
 // Load Environmental Variables
@@ -28,6 +29,15 @@ app.use(cookieParser(process.env.COOKIE_SECRET))
 app.use('/auth', authRoute)
 app.use('/account', accountsRoute)
 app.use('/tracker', trackerRoute)
+
+// Serving the frontend if in production
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('frontend/build'))
+
+    app.get('*', (req, res => {
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+    }))
+}
 
 // Connect to Database
 mongoose.connect(process.env.DATABASE_URI, {

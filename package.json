@@ -2,11 +2,12 @@
   "name": "assignment-tracker-backend",
   "version": "0.5.0",
   "description": "The backend for a MERN app to help students keep track of their assignments.",
-  "main": "src/server.js",
+  "main": "server.js",
   "scripts": {
     "start": "node src/server.js",
     "startDev": "nodemon src/server.js",
-    "doc": "jsdoc -c jsdoc.json"
+    "doc": "jsdoc -c jsdoc.json",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "Hans Von Gruenigen",
   "license": "MIT",
