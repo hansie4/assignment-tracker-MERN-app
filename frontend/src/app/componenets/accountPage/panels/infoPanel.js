@@ -7,7 +7,7 @@ function InfoPanel(props) {
             <hr />
             <p className="fs-4">Username: {props.username}</p>
             <p className="fs-4">Email Address: {props.email_address}</p>
-            <p className="fs-4">Date Registered: {props.date_registered}</p>
+            <p className="fs-4">Date Registered: {new Date(props.date_registered)}</p>
         </div>
     )
 }
