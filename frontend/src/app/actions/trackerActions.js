@@ -826,8 +826,6 @@ export const selectSemester = (semester_id) => (dispatch, getState) => {
             }
         })
     }
-
-    return dispatch(selectClass())
 }
 
 export const selectClass = (class_id) => (dispatch, getState) => {
