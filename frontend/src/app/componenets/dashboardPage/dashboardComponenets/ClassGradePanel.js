@@ -62,7 +62,7 @@ function ClassGradePanel({
                 </Card.Header>
                 <Card.Body className='p-0'>
                     {
-                        gradeMatrix ?
+                        gradeMatrix && gradeMatrix.length > 0 ?
                             <Table striped bordered hover size='sm' responsive className='m-0'>
                                 <thead>
                                     <tr>
@@ -151,7 +151,9 @@ const createGradeMatrix = (assignment_types, assignments) => {
 
     assignments.forEach(assignment => {
         let row = matrix.find(arr => arr[0] === assignment.assignment_type_id)
-        row[3].push(assignment.grade)
+        if (row) {
+            row[3].push(assignment.grade)
+        }
     })
 
     return matrix
