@@ -11,7 +11,7 @@ import InputGroup from 'react-bootstrap/InputGroup'
 import FormControl from 'react-bootstrap/FormControl'
 import Dropdown from 'react-bootstrap/Dropdown'
 
-import { XCircleFill, PlusCircleFill } from 'react-bootstrap-icons'
+import { XCircleFill, Plus, FileEarmarkText } from 'react-bootstrap-icons'
 
 function AddAssignmentModal({
     show,
@@ -109,12 +109,15 @@ function AddAssignmentModal({
                         <InputGroup.Text>Grade</InputGroup.Text>
                     </InputGroup.Prepend>
                     <FormControl type='number' onChange={(event) => handleChange(event, setGrade)} disabled={!turned_in} />
+                    <InputGroup.Append>
+                        <InputGroup.Text>%</InputGroup.Text>
+                    </InputGroup.Append>
                 </InputGroup>
             </Modal.Body>
             <Modal.Footer>
                 <ButtonGroup className='w-100'>
                     <Button variant='secondary' onClick={() => close()}><XCircleFill /></Button>
-                    <Button variant='primary' onClick={() => addAssignment({ class_id: selected_class_id, semester_id: selected_semester_id, name, notes, due_date, assignment_type_id: (selectedAssignmentType ? selectedAssignmentType._id : null), turned_in, grade })}><PlusCircleFill /></Button>
+                    <Button variant='success' onClick={() => addAssignment({ class_id: selected_class_id, semester_id: selected_semester_id, name, notes, due_date, assignment_type_id: (selectedAssignmentType ? selectedAssignmentType._id : null), turned_in, grade })}><Plus className='mb-1' /><FileEarmarkText className='mb-1' /></Button>
                 </ButtonGroup>
             </Modal.Footer>
         </Modal >

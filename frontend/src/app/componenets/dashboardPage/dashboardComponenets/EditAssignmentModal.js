@@ -34,8 +34,8 @@ function AssignmentEditModal({
 
     useEffect(() => {
         if (assignment) {
-            setTurnedIn(assignment.turned_in)
-            setSelectedAssignmentType(assignment_types.find((value) => value._id === assignment.assignment_type_id))
+            setTurnedIn(assignment[1])
+            setSelectedAssignmentType(assignment_types.find((value) => value._id === assignment[2]))
         }
     }, [assignment, assignment_types])
 
@@ -43,7 +43,7 @@ function AssignmentEditModal({
         return (
             <Modal show={show} onHide={close} centered backdrop="static" keyboard={false} animation={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit '{assignment.name}'</Modal.Title>
+                    <Modal.Title>Edit '{assignment[4]}'</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <InputGroup className='mb-3'>
@@ -58,19 +58,19 @@ function AssignmentEditModal({
                         <InputGroup.Prepend>
                             <InputGroup.Text>Name:</InputGroup.Text>
                         </InputGroup.Prepend>
-                        <FormControl onChange={(event) => handleChange(event, setName)} defaultValue={assignment.name} type='text' />
+                        <FormControl onChange={(event) => handleChange(event, setName)} defaultValue={assignment[4]} type='text' />
                     </InputGroup>
                     <InputGroup className='mb-3'>
                         <InputGroup.Prepend>
                             <InputGroup.Text>Notes:</InputGroup.Text>
                         </InputGroup.Prepend>
-                        <FormControl onChange={(event) => handleChange(event, setNotes)} defaultValue={assignment.notes} type='text' />
+                        <FormControl onChange={(event) => handleChange(event, setNotes)} defaultValue={assignment[5]} type='text' />
                     </InputGroup>
                     <InputGroup className='mb-3'>
                         <InputGroup.Prepend>
                             <InputGroup.Text>Due Date:</InputGroup.Text>
                         </InputGroup.Prepend>
-                        <FormControl onChange={(event) => { handleChange(event, setDueDate); setDateChanged(true) }} defaultValue={formatDate(new Date(assignment.due_date))} type='date' />
+                        <FormControl onChange={(event) => { handleChange(event, setDueDate); setDateChanged(true) }} defaultValue={formatDate(assignment[0])} type='date' />
                     </InputGroup>
                     <InputGroup className='mb-3 border rounded'>
                         <Dropdown className='w-100' as={ButtonGroup}>
@@ -118,14 +118,14 @@ function AssignmentEditModal({
                         <InputGroup.Prepend>
                             <InputGroup.Text>Grade:</InputGroup.Text>
                         </InputGroup.Prepend>
-                        <FormControl onChange={(event) => handleChange(event, setGrade)} defaultValue={assignment.grade} type='number' />
+                        <FormControl onChange={(event) => handleChange(event, setGrade)} defaultValue={assignment[3]} type='number' />
                     </InputGroup>
                 </Modal.Body>
                 <Modal.Footer>
                     <ButtonGroup className='w-100'>
-                        <Button variant='danger' onClick={() => deleteAssignment({ assignment_id: assignment._id, class_id: selected_class_id, semester_id: selected_semester_id })}><TrashFill /></Button>
+                        <Button variant='danger' onClick={() => deleteAssignment({ assignment_id: assignment[6], class_id: selected_class_id, semester_id: selected_semester_id })}><TrashFill /></Button>
                         <Button variant='secondary' onClick={() => close()}><XCircleFill /></Button>
-                        <Button variant='success' onClick={() => modifyAssignment({ assignment_id: assignment._id, class_id: selected_class_id, semester_id: selected_semester_id, new_name: name, new_notes: notes, new_due_date: (dateChanged ? due_date : null), new_assignment_type_id: (selectedAssignmentType ? selectedAssignmentType._id : null), new_turned_in: turned_in, new_grade: grade })}><SaveFill /></Button>
+                        <Button variant='success' onClick={() => modifyAssignment({ assignment_id: assignment[6], class_id: selected_class_id, semester_id: selected_semester_id, new_name: name, new_notes: notes, new_due_date: (dateChanged ? due_date : null), new_assignment_type_id: (selectedAssignmentType ? selectedAssignmentType._id : null), new_turned_in: turned_in, new_grade: grade })}><SaveFill /></Button>
                     </ButtonGroup>
                 </Modal.Footer>
             </Modal >
@@ -141,7 +141,8 @@ const handleChange = (event, setMethod) => {
     setMethod(event.target.value)
 }
 
-const formatDate = (date) => {
+const formatDate = (dateString) => {
+    const date = new Date(dateString)
     const month = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(date)
     const day = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(date)
     const year = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(date)
