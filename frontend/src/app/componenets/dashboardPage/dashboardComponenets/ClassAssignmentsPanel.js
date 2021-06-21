@@ -26,6 +26,10 @@ function ClassAssignmentsPanel({
     const [assignmentToEdit, setAssignmentToEdit] = useState(null)
 
     useEffect(() => {
+        setAddModal(false)
+        setEditModal(false)
+        setSortType(1)
+        setAssignmentToEdit(null)
         if (selectedClass) {
             setAssignmentMatrix(sortByDueDate(createAssignmentMatrix(selectedClass.assignments)))
         }
