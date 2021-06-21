@@ -718,10 +718,6 @@ export const modifyAssignment = ({ assignment_id, class_id, semester_id, new_nam
         dispatch(setError(400, 'Semester id is required'))
         return dispatch({ type: TRACKER_DONE_LOADING })
     }
-    if (!new_name && !new_notes && !new_due_date && !new_assignment_type_id && !new_turned_in && !new_grade) {
-        dispatch(setError(400, 'Values to modify are required'))
-        return dispatch({ type: TRACKER_DONE_LOADING })
-    }
 
     const url = '/tracker/assignment'
     const body = {
