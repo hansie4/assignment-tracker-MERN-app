@@ -14,17 +14,17 @@ function ClassGradePanel({
 
     const [gradeMatrix, setGradeMatrix] = useState(null)
     const [finalGrade, setFinalGrade] = useState(null)
-    const [includeOnlyGradedAssignments, setInclude] = useState(true)
+    const [includeAll, setInclude] = useState(false)
 
     useEffect(() => {
         if (selectedClass) {
-            setGradeMatrix(createWeightedGradeMatrix(selectedClass.assignment_types, selectedClass.assignments, includeOnlyGradedAssignments))
+            setGradeMatrix(createGradeMatrix(selectedClass.assignment_types, selectedClass.assignments, includeAll))
         }
-    }, [selectedClass, includeOnlyGradedAssignments])
+    }, [selectedClass, includeAll])
 
     useEffect(() => {
         if (gradeMatrix) {
-            setFinalGrade(getFinalClassGrade(gradeMatrix).toFixed(1))
+            setFinalGrade(getFinalClassGrade(gradeMatrix).toFixed(2))
         }
     }, [gradeMatrix])
 
@@ -82,12 +82,12 @@ function ClassGradePanel({
                                                 <tr key={index}>
                                                     <th>
                                                         {
-                                                            gradeMatrix_row[1]
+                                                            gradeMatrix_row[0]
                                                         }
                                                     </th>
                                                     <th>
                                                         {
-                                                            gradeMatrix_row[3]
+                                                            gradeMatrix_row[1]
                                                         }
                                                     </th>
                                                     <th>
@@ -97,7 +97,7 @@ function ClassGradePanel({
                                                     </th>
                                                     <th>
                                                         {
-                                                            (gradeMatrix_row[4] !== null) ? gradeMatrix_row[4].toFixed(1) + '%' : null
+                                                            (gradeMatrix_row[3] !== null) ? gradeMatrix_row[3].toFixed(2) + '%' : null
                                                         }
                                                     </th>
                                                 </tr>
@@ -115,7 +115,7 @@ function ClassGradePanel({
                         (gradeMatrix && finalGrade) ?
                             <ListGroup variant='flush'>
                                 <ListGroup.Item>
-                                    Total Assignments: {gradeMatrix.reduce((total, currentRow) => (currentRow[3] + total), 0)}
+                                    Total Assignments Counted: {gradeMatrix.reduce((total, currentRow) => (currentRow[1] + total), 0)}
                                 </ListGroup.Item>
                                 <ListGroup.Item>
                                     Overall Class Grade: {finalGrade}%
@@ -124,12 +124,12 @@ function ClassGradePanel({
                             :
                             null
                     }
-                    <Button block onClick={() => setInclude(!includeOnlyGradedAssignments)} className='m-0' variant='secondary'>
+                    <Button block onClick={() => setInclude(!includeAll)} className='m-0' variant='secondary'>
                         {
-                            includeOnlyGradedAssignments ?
-                                'View All Assignments'
+                            includeAll ?
+                                'View Grade For Assignments Till Today'
                                 :
-                                'View Only Graded Assignments'
+                                'View Grade Counting All Assignments'
                         }
                     </Button>
                 </Card.Footer>
@@ -143,8 +143,29 @@ function ClassGradePanel({
 
 }
 
-const createGradeMatrix = (assignment_types, assignments) => {
+const createGradeMatrix = (assignment_types, assignments, includeAll) => {
     let matrix = []
+
+    const assignmentMatrix = createAssignmentsMatrix(assignment_types, assignments)
+
+    assignmentMatrix.forEach((currentAssignmentTypeRow) => {
+
+        const assignmentTypeGrades = calculateAssignmentTypeGrade(currentAssignmentTypeRow[3], includeAll)
+
+        matrix.push([
+            currentAssignmentTypeRow[1], // Assignment Type Name
+            assignmentTypeGrades[1], // Number of assignments being counted
+            currentAssignmentTypeRow[2], // Assignment Type Weight
+            assignmentTypeGrades[0]  // Grade for that assignment type
+        ])
+    })
+
+    return matrix
+}
+
+const createAssignmentsMatrix = (assignment_types, assignments) => {
+    let matrix = []
+
     assignment_types.forEach(assignment_type => {
         matrix.push([assignment_type._id, assignment_type.name, assignment_type.weight, []])
     })
@@ -152,58 +173,61 @@ const createGradeMatrix = (assignment_types, assignments) => {
     assignments.forEach(assignment => {
         let row = matrix.find(arr => arr[0] === assignment.assignment_type_id)
         if (row) {
-            row[3].push(assignment.grade)
+            row[3].push([assignment.grade, assignment.due_date, assignment.turned_in])
         }
     })
 
     return matrix
 }
 
-const getAssignmentTypeAverage = (grades, includeOnlyGradedAssignments) => {
-    let average
-    let gradeSum = grades.reduce((total, currentGrade) => (currentGrade ? total + currentGrade : total), 0)
-    let numberOfAssignments
-    if (includeOnlyGradedAssignments) {
-        numberOfAssignments = grades.reduce((total, currentAssignment) => (currentAssignment ? total + 1 : total), 0)
+const calculateAssignmentTypeGrade = (assignmentsArray, includeAll) => {
+    let assignmentsCounted = 0
+    let cumulativeGrade = 0
+    let averageGrade
 
-        if (numberOfAssignments > 0) {
-            average = gradeSum / numberOfAssignments
+    assignmentsArray.forEach((currentAssignment) => {
+
+        const currentDate = new Date()
+        const grade = currentAssignment[0]
+        const dueDate = new Date(currentAssignment[1])
+        const turnedIn = currentAssignment[2]
+
+        if (includeAll) {
+            assignmentsCounted++
+            if (grade) {
+                cumulativeGrade += grade
+            }
         } else {
-            average = null
-        }
-    } else {
-        numberOfAssignments = grades.length
-
-        if (numberOfAssignments > 0) {
-            average = gradeSum / numberOfAssignments
-        } else {
-            average = 0
-        }
-    }
-
-    return average
-}
-
-const createWeightedGradeMatrix = (assignment_types, assignments, includeOnlyGradedAssignments) => {
-    let weightedGradeMatrix = []
-
-    const gradeMatrix = createGradeMatrix(assignment_types, assignments)
-
-    gradeMatrix.forEach((row) => {
-        if (includeOnlyGradedAssignments) {
-            weightedGradeMatrix.push([row[0], row[1], row[2], row[3].reduce((total, currentAssignment) => (currentAssignment ? total + 1 : total), 0), getAssignmentTypeAverage(row[3], includeOnlyGradedAssignments)])
-        } else {
-            weightedGradeMatrix.push([row[0], row[1], row[2], row[3].length, getAssignmentTypeAverage(row[3], includeOnlyGradedAssignments)])
+            if (turnedIn) {
+                if (grade) {
+                    assignmentsCounted++
+                    cumulativeGrade += grade
+                }
+            } else {
+                if ((dueDate - currentDate) < 0) {
+                    assignmentsCounted++
+                }
+            }
         }
     })
 
-    return weightedGradeMatrix
+    if (assignmentsCounted > 0) {
+        averageGrade = cumulativeGrade / assignmentsCounted
+    } else {
+        averageGrade = null
+    }
+
+    return [averageGrade, assignmentsCounted]
 }
 
-const getFinalClassGrade = (weightedGradeMatrix) => {
-    let final = weightedGradeMatrix.reduce((average, currentRow) => ((currentRow[4] !== null) ? (((currentRow[2] / 100) * currentRow[4]) + average) : (((currentRow[2] / 100) * 100) + average)), 0)
-
-    return final
+const getFinalClassGrade = (gradeMatrix) => {
+    return gradeMatrix.reduce((finalGrade, currentRow) => {
+        if (currentRow[3] !== null) {
+            return finalGrade += ((currentRow[2] / 100) * currentRow[3])
+        } else {
+            return finalGrade += ((currentRow[2] / 100) * 100)
+        }
+    }, 0)
 }
 
 const mapStateToProps = state => ({})
