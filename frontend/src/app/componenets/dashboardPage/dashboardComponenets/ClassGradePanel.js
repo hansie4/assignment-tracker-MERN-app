@@ -187,7 +187,7 @@ const calculateAssignmentTypeGrade = (assignmentsArray, includeAll) => {
 
     assignmentsArray.forEach((currentAssignment) => {
 
-        const currentDate = new Date()
+        const currentDate = new Date().setHours(0, 0, 0, 0)
         const grade = currentAssignment[0]
         const dueDate = new Date(currentAssignment[1])
         const turnedIn = currentAssignment[2]
@@ -204,7 +204,7 @@ const calculateAssignmentTypeGrade = (assignmentsArray, includeAll) => {
                     cumulativeGrade += grade
                 }
             } else {
-                if ((dueDate - currentDate) < 0) {
+                if (currentDate > dueDate) {
                     assignmentsCounted++
                 }
             }
