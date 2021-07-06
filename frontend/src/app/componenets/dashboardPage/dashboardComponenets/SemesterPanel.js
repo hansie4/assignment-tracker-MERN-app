@@ -16,6 +16,7 @@ import InstructorsPanel from './InstructorsPanel'
 import AssignmentTypesPanel from './AssignmentTypesPanel'
 import ClassAssignmentsPanel from './ClassAssignmentsPanel'
 import ClassGradePanel from './ClassGradePanel'
+import AllAssignmentsPanel from './AllAssignmentsPanel'
 
 function SemesterPanel({
     semester,
@@ -40,7 +41,7 @@ function SemesterPanel({
             {
                 (semester.start_date && semester.end_date) ?
                     <Row>
-                        <Col>
+                        <Col className='mb-3'>
                             <Card className='border border-dark'>
                                 <Card.Header>
                                     <Card.Title>{semester.name} Progress:</Card.Title>
@@ -54,6 +55,11 @@ function SemesterPanel({
                     :
                     null
             }
+            <Row>
+                <Col>
+                    <AllAssignmentsPanel selectedSemester={semester} />
+                </Col>
+            </Row>
             <Row className='mt-3 border-top border-dark'>
                 <Col className='mb-3 pt-3' lg={3}>
                     <Container className='p-0'>
