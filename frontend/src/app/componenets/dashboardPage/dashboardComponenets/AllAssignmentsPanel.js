@@ -42,7 +42,7 @@ function ClassInfoPanel({
                     </div>
                 </Card.Header>
                 <Card.Body className='p-0'>
-                    <Accordion>
+                    <Accordion defaultActiveKey='0'>
                         <Card>
                             <Accordion.Toggle
                                 as={Button}
