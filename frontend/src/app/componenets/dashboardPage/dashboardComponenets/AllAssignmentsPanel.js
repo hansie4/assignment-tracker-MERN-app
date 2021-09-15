@@ -250,9 +250,11 @@ const createAssignmentArrays = (assignmentsArray) => {
 
             if ((assignment[5] < today)) {
                 assignmentsArrays[0].push(assignment)
-            } else if (assignment[5] < (today + 604800000)) {
+            }
+            if (assignment[5] < (today + 604800000)) {
                 assignmentsArrays[1].push(assignment)
-            } else if (assignment[5] < (today + 2628000000)) {
+            }
+            if (assignment[5] < (today + 2628000000)) {
                 assignmentsArrays[2].push(assignment)
             }
         }
